@@ -22,6 +22,7 @@ module "project" {
     "storage-api.googleapis.com",
     "billingbudgets.googleapis.com",
     "sourcerepo.googleapis.com",
-    "cloudfunctions.googleapis.com"
+    "cloudfunctions.googleapis.com",
+    "cloudbuild.googleapis.com"
   ]
 }
