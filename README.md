@@ -1,5 +1,5 @@
-# whopooped
-Litterbox monitoring using the Raspberry Pi, Google Cloud and React Native. My cats Ake & Runa won't be happy.
+# syn
+Visual monitoring using the Raspberry Pi, Google Cloud and React Native.
 
 ## Raspberry Pi
 I have used the following components for the Raspberry Pi:
@@ -17,7 +17,7 @@ These steps are required to get started with the project:
 Motion is a highly configurable program that monitors video signals from many types of cameras. I have made the following changes to the included `motion.conf` file (compared to the default configuration):
 
 - Uncomment the `mmalcam_name vc.ril.camera` parameter
-- Enable and set `target_dir` to `/home/pi/whopooped`
+- Enable and set `target_dir` to `/home/pi/syn`
 - Set `ffmpeg_output_movies` to `off`
 - Set `stream_localhost` to `off`
 - Set `webcontrol_localhost` to `off`
@@ -35,10 +35,10 @@ Notice: since I am not using a service account to run Terraform, I have created 
 
 ### Configure the gcloud SDK
 Setup the gcloud tool in order to easily deploy changes to the infrastructure.
-- Create and switch to a new `gcloud` configuration: `gcloud config configurations create whopooped`
+- Create and switch to a new `gcloud` configuration: `gcloud config configurations create syn`
 - Authenticate with `gcloud auth login`
 - Get application default credentials with `gcloud auth application-default login`
-- Set the project name with `gcloud config set project <your-prefix>-whopooped` (replace `<your-prefix>`)
+- Set the project name with `gcloud config set project <your-prefix>-syn` (replace `<your-prefix>`)
 
 ### Terraform
 Terraform is configured to use a Google Cloud Storage bucket for saving state. Furthermore, the `owner` role is given to the organization admin for simplicity (far from being a best practice, but ok for a fun project).
@@ -58,7 +58,7 @@ Notice: new resources have been added over time. Some of them might need to depe
 ### Functions
 Terraform creates a new repository on Google Cloud Source Repositories where to host the Google Cloud Functions. Afterwards:
 - Configure a new git remote: `git config --global credential.https://source.developers.google.com.helper gcloud.sh`
-- Add the remote to this repository: `git remote add google https://source.developers.google.com/p/<your-project>/r/whopooped`. Replace `<your-project>` with the correct name.
+- Add the remote to this repository: `git remote add google https://source.developers.google.com/p/<your-project>/r/syn`. Replace `<your-project>` with the correct name.
 - Push changes with `git push --all google`
 
 ## Makefile

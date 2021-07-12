@@ -1,6 +1,6 @@
-resource "google_sourcerepo_repository" "whopooped" {
+resource "google_sourcerepo_repository" "syn" {
   project = data.google_project.this.project_id
-  name    = "whopooped"
+  name    = "syn"
 }
 
 resource "google_cloudfunctions_function" "process_upload" {
@@ -15,7 +15,7 @@ resource "google_cloudfunctions_function" "process_upload" {
   entry_point = "ProcessUpload"
 
   source_repository {
-    url = "https://source.developers.google.com/projects/${data.google_project.this.project_id}/repos/whopooped/moveable-aliases/master/paths/functions"
+    url = "https://source.developers.google.com/projects/${data.google_project.this.project_id}/repos/syn/moveable-aliases/master/paths/functions"
   }
 
   event_trigger {
