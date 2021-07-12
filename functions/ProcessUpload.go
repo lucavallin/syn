@@ -1,14 +1,14 @@
-// Package p contains a Google Cloud Storage Cloud Function.
+// Package p contains Google Cloud Functions
 package p
 
 import (
+	"cloud.google.com/go/storage"
+	vision "cloud.google.com/go/vision/apiv1"
 	"context"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
-	vision "cloud.google.com/go/vision/apiv1"
-	"cloud.google.com/go/storage"
 	"time"
 )
 
