@@ -1,16 +1,34 @@
+#
+# Create the Raspberry Pi service account
+#
+resource "google_service_account" "functions" {
+  project      = data.google_project.this.project_id
+  account_id   = "functions"
+  display_name = "Cloud Functions service account"
+}
+
+resource "google_storage_bucket_iam_binding" "functions" {
+  bucket = google_storage_bucket.uploads.name
+  role   = "roles/storage.objectViewer"
+  members = [
+    "serviceAccount:${google_service_account.functions.email}",
+  ]
+}
+
 resource "google_sourcerepo_repository" "syn" {
   project = data.google_project.this.project_id
   name    = "syn"
 }
 
 resource "google_cloudfunctions_function" "process_upload" {
-  project             = data.google_project.this.project_id
-  region              = "europe-west1"
-  name                = "ProcessUpload"
-  description         = "Processes new uploads to ${google_storage_bucket.uploads.name}"
-  runtime             = "go113"
-  ingress_settings    = "ALLOW_INTERNAL_ONLY"
-  available_memory_mb = 128
+  project               = data.google_project.this.project_id
+  region                = "europe-west1"
+  name                  = "ProcessUpload"
+  description           = "Processes new uploads to ${google_storage_bucket.uploads.name}"
+  service_account_email = google_service_account.functions.email
+  runtime               = "go113"
+  ingress_settings      = "ALLOW_INTERNAL_ONLY"
+  available_memory_mb   = 128
 
   entry_point = "ProcessUpload"
 
@@ -21,5 +39,9 @@ resource "google_cloudfunctions_function" "process_upload" {
   event_trigger {
     event_type = "google.storage.object.finalize"
     resource   = google_storage_bucket.uploads.name
+  }
+
+  environment_variables = {
+    "GOOGLE_CLOUD_PROJECT" : data.google_project.this.project_id
   }
 }

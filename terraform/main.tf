@@ -16,6 +16,8 @@ module "project" {
     "billingbudgets.googleapis.com",
     "sourcerepo.googleapis.com",
     "cloudfunctions.googleapis.com",
-    "cloudbuild.googleapis.com"
+    "cloudbuild.googleapis.com",
+    "vision.googleapis.com",
+    "firestore.googleapis.com"
   ]
 }
