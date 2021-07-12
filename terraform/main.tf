@@ -10,5 +10,16 @@ module "project" {
   billing_account             = data.google_billing_account.this.id
   disable_services_on_destroy = false
 
-  activate_apis = []
+  activate_apis = [
+    "admin.googleapis.com",
+    "cloudidentity.googleapis.com",
+    "cloudresourcemanager.googleapis.com",
+    "cloudbilling.googleapis.com",
+    "iam.googleapis.com",
+    "iamcredentials.googleapis.com",
+    "logging.googleapis.com",
+    "monitoring.googleapis.com",
+    "storage-api.googleapis.com",
+    "billingbudgets.googleapis.com"
+  ]
 }

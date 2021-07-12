@@ -41,6 +41,8 @@ I have made the following changes to the included `motion.conf` file (compared t
 The `terraform` directory contains all of the infrastructure configuration required by the project.
 Make sure you already have a Google Cloud organization and billing account before going forward.
 
+Notice: since I am not using a service account to run Terraform, I have created the billing budget and notifications manually.
+
 ### Configure the gcloud SDK
 Setup the gcloud tool in order to easily deploy changes to the infrastructure.
 - Create and switch to a new `gcloud` configuration: `gcloud config configurations create whopooped`
@@ -53,7 +55,6 @@ Terraform is configured to use a Google Cloud Storage bucket for saving state. F
 The following aspects are taken care of:
 - Project creation
 - Setup of IAM bindings
-- Billing budget and notifications
 - Terraform state storage bucket
 
 ## Makefile
