@@ -3,7 +3,7 @@ resource "google_sourcerepo_repository" "whopooped" {
   name    = "whopooped"
 }
 
-resource "google_cloudfunctions_function" "process_uploaded_image" {
+resource "google_cloudfunctions_function" "process_upload" {
   project             = data.google_project.this.project_id
   region              = "europe-west1"
   name                = "process-upload"
@@ -15,7 +15,7 @@ resource "google_cloudfunctions_function" "process_uploaded_image" {
   entry_point = "ProcessUpload"
 
   source_repository {
-    url = "https://source.developers.google.com/projects/cvln-whopooped/repos/whopooped/master/functions"
+    url = "https://source.developers.google.com/projects/${data.google_project.this.project_id}/repos/whopooped/moveable-aliases/master/paths/functions"
   }
 
   event_trigger {
