@@ -49,3 +49,8 @@ The `terraform` directory contains the infrastructure configuration for the proj
 ## Makefile
 The Makefile contains the following commands to make development easier:
 - `make copy-motion-config`: Copies the local `motion.conf` file in the `raspberrypi` directory of the repository to `/etc/motion/motion.conf` on the Raspberry Pi.
+
+# TODO
+Step 1:
+- Tweak `motion.conf` and send relevant images to Google Cloud Storage
+- Setup infrastructure
