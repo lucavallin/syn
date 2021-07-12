@@ -1,8 +1,8 @@
 # whopooped
-Litterbox monitoring using the Raspberry Pi & Camera, Motion, React Native, Firebase.
+Litterbox monitoring using the Raspberry Pi, Google Cloud and React Native.
 
 ## Introduction
-This IoT project is designed to monitor litterbox usage by my cats Ake & Runa, and to give me something to work on while sharpening my IoT, Google Cloud, AI and React Native skills.
+This IoT project is designed to monitor litterbox usage by my cats Ake & Runa.
 
 ## Raspberry Pi
 I have used the following components for the Raspberry Pi:
@@ -19,8 +19,11 @@ These steps are required to get started with the project:
 ### Motion 
 Motion is a highly configurable program that monitors video signals from many types of cameras.
 
-- Install `motion` with `sudo apt-get install motion`. See https://motion-project.github.io/index.html for further information
-- Copy the `motion.conf` file included in this repository in the `raspberrypi` directory to `/etc/motion/motion.conf`
+The `terraform/raspberrypi.tf` configuration, via SSH:
+- Installs `motion` and `gcloud` on the Raspberry Pi
+- Sets the correct permissions for directories used by `motion`
+- Creates service account keys and copies them to the Raspberry Pi
+- Further information on the service account and IAM roles can be found in `iam.tf` and `storage.tf`
 
 I have made the following changes to the included `motion.conf` file (compared to the default configuration):
 
