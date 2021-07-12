@@ -53,14 +53,14 @@ The `terraform/raspberrypi.tf` configuration, via SSH:
 - Creates service account keys and copies them to the Raspberry Pi
 - Further information on the service account and IAM roles can be found in `iam.tf` and `storage.tf`
 
-On the first run, the contents of `backend.tf` need to be commented out since the state bucket does not exist yet. Also, the Google Cloud project needs to be created before everything else. Therefore, during the first run, this should be the command to run:
+The contents of `backend.tf` need to be commented out until the state bucket is created. Also, the Google Cloud project needs to be setup before everything else. Therefore, during the first run, this is the command to run:
 
 ```shell
 terraform plan -target=module.project -out=syn.plan
 terraform apply syn.plan
 ```
 
-Notice: new resources have been added over time. Some of them might need to depend on other ones, but the issue didn't come up because of the way I worked.
+Notice: the Google Cloud Functions source code in Google Cloud Source Repository must be present before deploying a function. 
 
 ### Functions
 Terraform creates a new repository on Google Cloud Source Repositories where to host the Google Cloud Functions. Afterwards:
