@@ -61,7 +61,7 @@ Notice: new resources have been added over time. Some of them might need to depe
 ### Functions
 Terraform creates a new repository on Google Cloud Source Repositories where to host the Google Cloud Functions. Afterwards:
 - Configure a new git remote: `git config --global credential.https://source.developers.google.com.helper gcloud.sh`
-- Add the remote to this repository: `git remote add google https://source.developers.google.com/p/<your-project>/r/functions`. Replace `<your-project>` with the correct name.
+- Add the remote to this repository: `git remote add google https://source.developers.google.com/p/<your-project>/r/whopooped`. Replace `<your-project>` with the correct name.
 - Push changes with `git push --all google`
 
 ## Makefile

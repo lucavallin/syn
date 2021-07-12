@@ -1,6 +1,6 @@
-resource "google_sourcerepo_repository" "functions" {
+resource "google_sourcerepo_repository" "whopooped" {
   project = data.google_project.this.project_id
-  name    = "functions"
+  name    = "whopooped"
 }
 
 resource "google_cloudfunctions_function" "process_uploaded_image" {
@@ -15,7 +15,7 @@ resource "google_cloudfunctions_function" "process_uploaded_image" {
   entry_point = "ProcessUpload"
 
   source_repository {
-    url = "${google_sourcerepo_repository.functions.name}/functions"
+    url = "https://source.developers.google.com/projects/cvln-whopooped/repos/whopooped/master/functions"
   }
 
   event_trigger {
