@@ -1,4 +1,14 @@
-variable "tf_state_bucket" {
+variable "company_code" {
     type = string
-    description = "The name of the GCS bucket containing the Terraform state"
+    description = "Company code to prefix resources where needed"
+}
+
+variable "company_domain" {
+    type = string
+    description = "Google Cloud organization domain"
+}
+
+variable "google_cloud_owner" {
+    type = string
+    description = "Google Cloud user email of the organization owner"
 }

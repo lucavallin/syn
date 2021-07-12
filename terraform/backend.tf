@@ -1,6 +1,7 @@
 terraform {
   backend "gcs" {
-    bucket = var.tf_state_bucket
+    # Replace with your unique bucket name
+    bucket = "cvln-whopooped-tfstate"
     prefix = "terraform/whopooped/state"
   }
 }
