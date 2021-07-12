@@ -1,5 +1,6 @@
-terraform.tfvars
+*.tfvars
 .terraform
 .idea
 .terraform.lock.hcl
 *.plan
+keys.json

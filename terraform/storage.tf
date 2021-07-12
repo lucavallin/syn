@@ -12,3 +12,34 @@ resource "google_storage_bucket" "org_terraform_state" {
     enabled = true
   }
 }
+
+#
+# Create bucket for storing Raspberry Pi images
+#
+resource "google_storage_bucket" "images" {
+  project                     = data.google_project.this.project_id
+  name                        = "${var.company_code}-whopooped-images"
+  location                    = "europe-west4"
+  force_destroy               = false
+  uniform_bucket_level_access = true
+
+  lifecycle_rule {
+    condition {
+      age = 3
+    }
+    action {
+      type = "Delete"
+    }
+  }
+}
+
+#
+# Allow the Raspberry Pi service account to write to the bucket
+#
+resource "google_storage_bucket_iam_binding" "binding" {
+  bucket = google_storage_bucket.images.name
+  role   = "roles/storage.objectCreator"
+  members = [
+    "serviceAccount:${google_service_account.raspberrypi.email}",
+  ]
+}

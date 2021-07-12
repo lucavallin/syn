@@ -25,7 +25,7 @@ Motion is a highly configurable program that monitors video signals from many ty
 I have made the following changes to the included `motion.conf` file (compared to the default configuration):
 
 - Uncomment the `mmalcam_name vc.ril.camera` parameter
-- Enable and set `target_dir` to `/home/pi/Documents/motion`
+- Enable and set `target_dir` to `/home/pi/whopooped`
 - Set `ffmpeg_output_movies` to `off`
 - Set `stream_localhost` to `off`
 - Set `webcontrol_localhost` to `off`
@@ -34,8 +34,6 @@ I have made the following changes to the included `motion.conf` file (compared t
 - Set `locate_motion_style` to `redbox`
 - Set `event_gap` to `10`
 - Set `output_pictures` to `center`
-- Set `quality` to `80`
-- Set `text_changes` to `on`
 
 ## Infrastructure
 The `terraform` directory contains all of the infrastructure configuration required by the project.
