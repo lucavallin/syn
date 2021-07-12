@@ -37,22 +37,24 @@ I have made the following changes to the included `motion.conf` file (compared t
 - Set `quality` to `80`
 - Set `text_changes` to `on`
 
-## Architecture
-This project makes use of the following:
-- `Firebase`: for providing functionality to the mobile app and to process incoming images from the Raspberry Pi
-- `Terraform`: to setup the Firebase resources
-- `React Native`: to develop a multi-platform mobile app for managing the system
+## Infrastructure
+The `terraform` directory contains all of the infrastructure configuration required by the project.
+Make sure you already have a Google Cloud organization and billing account before going forward.
 
-## Terraform
-The `terraform` directory contains the infrastructure configuration for the projects. To make things easier, I have created the Google Cloud project and the bucket that contains the state manually.
-- First create a billing account manually at "https://console.cloud.google.com/billing"
-
-## gcloud Setup
+### Configure the gcloud SDK
 Setup the gcloud tool in order to easily deploy changes to the infrastructure.
 - Create and switch to a new `gcloud` configuration: `gcloud config configurations create whopooped`
 - Authenticate with `gcloud auth login`
 - Get application default credentials with `gcloud auth application-default login`
 - Set the project name with `gcloud config set project <your-prefix>-whopooped` (replace `<your-prefix>`)
+
+### Terraform
+Terraform is configured to use a Google Cloud Storage bucket for saving state. Furthermore, the `owner` role is given to the organization admin for simplicity (far from being a best practice, but ok for a fun project).
+The following aspects are taken care of:
+- Project creation
+- Setup of IAM bindings
+- Billing budget and notifications
+- Terraform state storage bucket
 
 ## Makefile
 The Makefile contains the following commands to make development easier:
