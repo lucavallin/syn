@@ -17,15 +17,7 @@ These steps are required to get started with the project:
 - Enable the Raspberry Pi Camera by changing the correct settings after running `sudo raspi-config`
 
 ### Motion 
-Motion is a highly configurable program that monitors video signals from many types of cameras.
-
-The `terraform/raspberrypi.tf` configuration, via SSH:
-- Installs `motion` and `gcloud` on the Raspberry Pi
-- Sets the correct permissions for directories used by `motion`
-- Creates service account keys and copies them to the Raspberry Pi
-- Further information on the service account and IAM roles can be found in `iam.tf` and `storage.tf`
-
-I have made the following changes to the included `motion.conf` file (compared to the default configuration):
+Motion is a highly configurable program that monitors video signals from many types of cameras. I have made the following changes to the included `motion.conf` file (compared to the default configuration):
 
 - Uncomment the `mmalcam_name vc.ril.camera` parameter
 - Enable and set `target_dir` to `/home/pi/whopooped`
@@ -57,6 +49,12 @@ The following aspects are taken care of:
 - Project creation
 - Setup of IAM bindings
 - Terraform state storage bucket
+
+The `terraform/raspberrypi.tf` configuration, via SSH:
+- Installs `motion` and `gcloud` on the Raspberry Pi
+- Sets the correct permissions for directories used by `motion`
+- Creates service account keys and copies them to the Raspberry Pi
+- Further information on the service account and IAM roles can be found in `iam.tf` and `storage.tf`
 
 ## Makefile
 The Makefile contains the following commands to make development easier:
