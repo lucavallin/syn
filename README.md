@@ -45,6 +45,14 @@ This project makes use of the following:
 
 ## Terraform
 The `terraform` directory contains the infrastructure configuration for the projects. To make things easier, I have created the Google Cloud project and the bucket that contains the state manually.
+- First create a billing account manually at "https://console.cloud.google.com/billing"
+
+## gcloud Setup
+Setup the gcloud tool in order to easily deploy changes to the infrastructure.
+- Create and switch to a new `gcloud` configuration: `gcloud config configurations create whopooped`
+- Authenticate with `gcloud auth login`
+- Get application default credentials with `gcloud auth application-default login`
+- Set the project name with `gcloud config set project <your-prefix>-whopooped` (replace `<your-prefix>`)
 
 ## Makefile
 The Makefile contains the following commands to make development easier:
