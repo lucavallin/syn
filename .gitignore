@@ -4,3 +4,4 @@
 .terraform.lock.hcl
 *.plan
 keys.json
+node_modules
