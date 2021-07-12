@@ -1,5 +1,5 @@
-// Package p contains Google Cloud Functions
-package p
+// Package functions contains Google Cloud Functions
+package functions
 
 import (
 	"cloud.google.com/go/firestore"

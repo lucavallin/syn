@@ -45,3 +45,29 @@ resource "google_cloudfunctions_function" "process_upload" {
     "GOOGLE_CLOUD_PROJECT" : data.google_project.this.project_id
   }
 }
+
+resource "google_cloudfunctions_function" "notify" {
+  project               = data.google_project.this.project_id
+  region                = "europe-west1"
+  name                  = "Notify"
+  description           = "Notifies of newly labeled uploads"
+  service_account_email = google_service_account.functions.email
+  runtime               = "go113"
+  ingress_settings      = "ALLOW_INTERNAL_ONLY"
+  available_memory_mb   = 128
+
+  entry_point = "Notify"
+
+  source_repository {
+    url = "https://source.developers.google.com/projects/${data.google_project.this.project_id}/repos/syn/moveable-aliases/master/paths/functions"
+  }
+
+  event_trigger {
+    event_type = "providers/cloud.firestore/eventTypes/document.create"
+    resource   = google_storage_bucket.uploads.name
+  }
+
+  environment_variables = {
+    "GOOGLE_CLOUD_PROJECT" : data.google_project.this.project_id
+  }
+}

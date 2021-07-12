@@ -74,3 +74,4 @@ The Makefile contains the following commands to make development easier:
 
 ## TODO
 - Use signed URLs
+- use firebase
