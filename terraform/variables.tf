@@ -12,3 +12,20 @@ variable "google_cloud_owner" {
     type = string
     description = "Google Cloud user email of the organization owner"
 }
+
+variable "raspberry_pi_user" {
+    type = string
+    description = "Username for SSH connection to the Raspberry Pi"
+    default = "pi"
+}
+
+variable "raspberry_pi_password" {
+    type = string
+    description = "Password for SSH connection to the Raspberry Pi"
+    default = "raspberry"
+}
+
+variable "raspberry_pi_host" {
+    type = string
+    description = "IP for SSH connection to the Raspberry Pi"
+}
