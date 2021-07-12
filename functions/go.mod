@@ -1,4 +1,4 @@
-module functions
+module cavall.in/syn
 
 go 1.13
 
