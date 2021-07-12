@@ -20,6 +20,8 @@ module "project" {
     "logging.googleapis.com",
     "monitoring.googleapis.com",
     "storage-api.googleapis.com",
-    "billingbudgets.googleapis.com"
+    "billingbudgets.googleapis.com",
+    "sourcerepo.googleapis.com",
+    "cloudfunctions.googleapis.com"
   ]
 }

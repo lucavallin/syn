@@ -56,6 +56,13 @@ The `terraform/raspberrypi.tf` configuration, via SSH:
 - Creates service account keys and copies them to the Raspberry Pi
 - Further information on the service account and IAM roles can be found in `iam.tf` and `storage.tf`
 
+Notice: new resources have been added over time. Some of them might need to depend on other ones, but the issue didn't come up because of the way I worked.
+
+### Functions
+Terraform creates a new repository on Google Cloud Source Repositories where to host the Google Cloud Functions. Afterwards:
+- Configure a new git remote: `git config --global credential.https://source.developers.google.com.helper gcloud.sh`
+- Add the remote to this repository: `git remote add google https://source.developers.google.com/p/<your-project>/r/functions`. Replace `<your-project>` with the correct name.
+
 ## Makefile
 The Makefile contains the following commands to make development easier:
 - `make ssh`: Easily connect over SSH to the Raspberry Pi

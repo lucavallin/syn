@@ -20,17 +20,7 @@ resource "google_storage_bucket" "images" {
   project                     = data.google_project.this.project_id
   name                        = "${var.company_code}-whopooped-images"
   location                    = "europe-west4"
-  force_destroy               = false
   uniform_bucket_level_access = true
-
-  lifecycle_rule {
-    condition {
-      age = 3
-    }
-    action {
-      type = "Delete"
-    }
-  }
 }
 
 #
