@@ -1,8 +1,5 @@
 # whopooped
-Litterbox monitoring using the Raspberry Pi, Google Cloud and React Native.
-
-## Introduction
-This IoT project is designed to monitor litterbox usage by my cats Ake & Runa.
+Litterbox monitoring using the Raspberry Pi, Google Cloud and React Native. My cats Ake & Runa won't be happy.
 
 ## Raspberry Pi
 I have used the following components for the Raspberry Pi:
