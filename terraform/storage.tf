@@ -1,10 +1,10 @@
 #
 # Create bucket for storing Terraform state
 #
-resource "google_storage_bucket" "org_terraform_state" {
+resource "google_storage_bucket" "terraform_state" {
   project                     = data.google_project.this.project_id
   name                        = "${var.company_code}-syn-tfstate"
-  location                    = "EU"
+  location                    = "europe-west4"
   force_destroy               = false
   uniform_bucket_level_access = true
 
@@ -26,7 +26,7 @@ resource "google_storage_bucket" "uploads" {
 #
 # Allow the Raspberry Pi service account to write to the bucket
 #
-resource "google_storage_bucket_iam_binding" "binding" {
+resource "google_storage_bucket_iam_binding" "raspberry_pi" {
   bucket = google_storage_bucket.uploads.name
   role   = "roles/storage.objectCreator"
   members = [
