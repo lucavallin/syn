@@ -71,3 +71,6 @@ Terraform creates a new repository on Google Cloud Source Repositories where to 
 ## Makefile
 The Makefile contains the following commands to make development easier:
 - `make ssh`: Easily connect over SSH to the Raspberry Pi
+
+## TODO
+- Use signed URLs

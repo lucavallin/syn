@@ -3,7 +3,8 @@
 #
 resource "google_app_engine_application" "this" {
   provider      = google-beta
-  location_id   = "europe-west4"
+  project       = data.google_project.this.project_id
+  location_id   = "europe-west"
   database_type = "CLOUD_FIRESTORE"
 }
 
@@ -11,6 +12,7 @@ resource "google_app_engine_application" "this" {
 # Let functions use Firestore
 #
 resource "google_project_iam_member" "firestore_user" {
-  role   = "roles/datastore.user"
-  member = "serviceAccount:${google_service_account.functions.email}"
+  project = data.google_project.this.project_id
+  role    = "roles/datastore.user"
+  member  = "serviceAccount:${google_service_account.functions.email}"
 }
