@@ -77,3 +77,4 @@ The Makefile contains the following commands to make development easier:
 ## TODO
 - check that file is an image
 - ignore duplicates?
+- use signed URLs

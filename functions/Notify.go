@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-FirestoreEvent is the payload of a Firestore event.
+//FirestoreEvent is the payload of a Firestore event.
 type FirestoreEvent struct {
 	OldValue   FirestoreValue `json:"oldValue"`
 	Value      FirestoreValue `json:"value"`

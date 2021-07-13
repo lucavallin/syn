@@ -73,7 +73,7 @@ func ProcessUpload(ctx context.Context, e GCSEvent) error {
 
 	labels := funk.Map(detectedLabels, func(l *vision3.EntityAnnotation) syn.Label {
 		return syn.Label{Description: l.Description, Score: l.Score}
-	})
+	}).([]syn.Label)
 
 	// Reject images that don't contain the allowed labels
 	allowed := funk.Contains(labels, func(l syn.Label) bool {
