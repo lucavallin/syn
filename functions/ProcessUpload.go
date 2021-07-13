@@ -7,7 +7,6 @@ import (
 	"cloud.google.com/go/storage"
 	vision "cloud.google.com/go/vision/apiv1"
 	"context"
-	"fmt"
 	"github.com/thoas/go-funk"
 	vision3 "google.golang.org/genproto/googleapis/cloud/vision/v1"
 	"log"
@@ -15,18 +14,21 @@ import (
 	"strings"
 )
 
-// GCSEvent is the payload of a GCS event. Please refer to the docs for
-// additional information regarding GCS events.
+// GCSEvent is the payload of a GCS event
 type GCSEvent struct {
 	Bucket string `json:"bucket"`
 	Name   string `json:"name"`
 }
 
-// ProcessUpload prints a message when a file is changed in a Cloud Storage bucket.
+// ProcessUpload labels images that have been uploaded to Cloud Storage
+// and saves the data into Firestore when the labels we want are found in the image
 func ProcessUpload(ctx context.Context, e GCSEvent) error {
 	log.Printf("Processing upload: %s", e.Name)
 	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
 
+	//
+	// Get object from Cloud Storage
+	//
 	gcs, err := storage.NewClient(ctx)
 	if err != nil {
 		return err
@@ -45,7 +47,10 @@ func ProcessUpload(ctx context.Context, e GCSEvent) error {
 	}
 	defer rc.Close()
 
-	// Uploads are stored to Firestore only if Vision API returns at least one of these labels (comma-separated)
+	//
+	// Clean allowed values and fail if none are provided
+	// Uploads are stored to Firestore only if Vision API finds at least one of the labels
+	//
 	acceptedLabels := cleanLabels(os.Getenv("ACCEPTED_LABELS"))
 	if len(acceptedLabels) == 0 {
 		log.Printf("Deleting upload: No ACCEPTED_LABELS provided")
@@ -56,7 +61,9 @@ func ProcessUpload(ctx context.Context, e GCSEvent) error {
 		return nil
 	}
 
-	// Creates a client.
+	//
+	// Query Vision API
+	//
 	labeler, err := vision.NewImageAnnotatorClient(ctx)
 	if err != nil {
 		return err
@@ -73,19 +80,21 @@ func ProcessUpload(ctx context.Context, e GCSEvent) error {
 		return err
 	}
 
+	//
+	// Transform resulting labels and check if they contain at least
+	// one of the allowed labels
+	//
 	labels := funk.Map(detectedLabels, func(l *vision3.EntityAnnotation) syn.Label {
 		return syn.NewLabel(l.Description, l.Score)
 	}).([]syn.Label)
 
-	// Reject images that don't contain the allowed labels
 	allowed := funk.Contains(labels, func(l syn.Label) bool {
-		fmt.Printf("%v, %s, %d", acceptedLabels, l.Description, funk.IndexOf(acceptedLabels, l.Description))
 		return -1 != funk.IndexOf(acceptedLabels, l.Description)
 	})
 	if !allowed {
-		log.Printf("Deleting upload: no allowed labels detected")
-		log.Printf("Wanted: %v", acceptedLabels)
+		log.Printf("Allowed: %v", acceptedLabels)
 		log.Printf("Found: %v", labels)
+		log.Printf("Deleting upload: no allowed labels detected")
 		if err := object.Delete(ctx); err != nil {
 			log.Printf("Failed to delete upload: %s", e.Name)
 			return err
@@ -93,6 +102,9 @@ func ProcessUpload(ctx context.Context, e GCSEvent) error {
 		return nil
 	}
 
+	//
+	// Store file (path) and labels to Firestore
+	//
 	firestore, err := firestore.NewClient(ctx, projectID)
 	if err != nil {
 		return err
@@ -116,6 +128,7 @@ func ProcessUpload(ctx context.Context, e GCSEvent) error {
 	return nil
 }
 
+// cleanLabels trims the comma-separated allowed labels, makes them lowercase and splits them into a slice
 func cleanLabels(labels string) []string {
 	lowerLabels := strings.ToLower(labels)
 	labelsWithoutWhitespaces := strings.ReplaceAll(lowerLabels, " ", "")
