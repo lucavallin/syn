@@ -2,6 +2,7 @@
 package functions
 
 import (
+	"cavall.in/syn/syn"
 	"cloud.google.com/go/firestore"
 	"cloud.google.com/go/storage"
 	vision "cloud.google.com/go/vision/apiv1"
@@ -11,25 +12,13 @@ import (
 	"log"
 	"os"
 	"strings"
-	"time"
 )
 
 // GCSEvent is the payload of a GCS event. Please refer to the docs for
 // additional information regarding GCS events.
 type GCSEvent struct {
-	Bucket string `json:"bucket" firestore`
+	Bucket string `json:"bucket"`
 	Name   string `json:"name"`
-}
-
-type File struct {
-	Bucket string `json:"bucket" firestore:"bucket"`
-	Name string `json:"name" firestore:"name"`
-}
-
-type Upload struct {
-	File `json:"file" firestore:"file"`
-	Labels []*vision3.EntityAnnotation `json:"labels" firestore:"labels"`
-	Created time.Time `json:"created" firestore:"created"`
 }
 
 // ProcessUpload prints a message when a file is changed in a Cloud Storage bucket.
@@ -58,7 +47,7 @@ func ProcessUpload(ctx context.Context, e GCSEvent) error {
 	// Uploads are stored to Firestore only if Vision API returns at least one of these labels (comma-separated)
 	acceptedLabels := strings.Split(strings.ToLower(os.Getenv("ACCEPTED_LABELS")), ",")
 	if len(acceptedLabels) == 0 {
-		log.Printf("Upload rejected: No ACCEPTED_LABELS provided")
+		log.Printf("Deleting upload: No ACCEPTED_LABELS provided")
 		if err := object.Delete(ctx); err != nil {
 			log.Printf("Failed to delete upload: %s", e.Name)
 			return err
@@ -78,17 +67,23 @@ func ProcessUpload(ctx context.Context, e GCSEvent) error {
 		return err
 	}
 
-	labels, err := labeler.DetectLabels(ctx, image, nil, 10)
+	detectedLabels, err := labeler.DetectLabels(ctx, image, nil, 10)
 	if err != nil {
 		return err
 	}
 
+	labels := funk.Map(detectedLabels, func(l *vision3.EntityAnnotation) syn.Label {
+		return syn.Label{Description: l.Description, Score: l.Score}
+	})
+
 	// Reject images that don't contain the allowed labels
-	allowed := funk.Contains(labels, func(l *vision3.EntityAnnotation) bool {
+	allowed := funk.Contains(labels, func(l syn.Label) bool {
 		return funk.Contains(acceptedLabels, l.Description)
 	})
 	if !allowed {
-		log.Printf("Upload deleted: no allowed labels detected")
+		log.Printf("Deleting upload: no allowed labels detected")
+		log.Printf("Wanted: %v", acceptedLabels)
+		log.Printf("Found: %v", labels)
 		if err := object.Delete(ctx); err != nil {
 			log.Printf("Failed to delete upload: %s", e.Name)
 			return err
@@ -102,8 +97,8 @@ func ProcessUpload(ctx context.Context, e GCSEvent) error {
 	}
 
 	uploads := firestore.Collection("Uploads")
-	doc, _, err := uploads.Add(ctx, Upload{
-		File: File{
+	doc, _, err := uploads.Add(ctx, syn.Upload{
+		File: syn.File{
 			Bucket: object.BucketName(),
 			Name: object.ObjectName(),
 		},
