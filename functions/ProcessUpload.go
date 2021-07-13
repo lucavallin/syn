@@ -7,6 +7,7 @@ import (
 	"cloud.google.com/go/storage"
 	vision "cloud.google.com/go/vision/apiv1"
 	"context"
+	"fmt"
 	"github.com/thoas/go-funk"
 	vision3 "google.golang.org/genproto/googleapis/cloud/vision/v1"
 	"log"
@@ -72,12 +73,13 @@ func ProcessUpload(ctx context.Context, e GCSEvent) error {
 	}
 
 	labels := funk.Map(detectedLabels, func(l *vision3.EntityAnnotation) syn.Label {
-		return syn.Label{Description: l.Description, Score: l.Score}
+		return syn.NewLabel(l.Description, l.Score)
 	}).([]syn.Label)
 
 	// Reject images that don't contain the allowed labels
 	allowed := funk.Contains(labels, func(l syn.Label) bool {
-		return funk.Contains(acceptedLabels, l.Description)
+		fmt.Printf("%v, %s, %d", acceptedLabels, l.Description, funk.IndexOf(acceptedLabels, l.Description))
+		return -1 != funk.IndexOf(acceptedLabels, l.Description)
 	})
 	if !allowed {
 		log.Printf("Deleting upload: no allowed labels detected")

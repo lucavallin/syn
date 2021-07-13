@@ -27,3 +27,7 @@ func CleanLabels(labels string) []string {
 
 	return strings.Split(labelsWithoutWhitespaces, ",")
 }
+
+func NewLabel(description string, score float32) Label {
+	return Label{description, score}
+}
