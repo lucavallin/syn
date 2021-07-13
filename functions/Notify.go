@@ -33,14 +33,17 @@ type FirestoreValue struct {
 
 // IftttNotification represents a notification to IFTTT
 type IftttNotification struct {
-	Labels string `json:"value1,omitempty"`
-	ImageUrl string `json:"value2,omitempty"`
+	Labels string `json:"value1"`
+	ImageUrl string `json:"value2"`
 }
 
 // Notify is triggered by a change to a Firestore document.
 func Notify(ctx context.Context, e FirestoreEvent) error {
 	log.Printf("Event received: %v", e)
 	iftttWebhookUrl := os.Getenv("IFTTT_WEBHOOK_URL")
+
+	log.Printf("Event received: %v", e.Value.Fields)
+
 
 	notification, _ := json.Marshal(IftttNotification{
 		Labels: "Hello",
