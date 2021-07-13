@@ -31,7 +31,10 @@ Motion is a highly configurable program that monitors video signals from many ty
 The `terraform` directory contains all of the infrastructure configuration required by the project.
 Make sure you already have a Google Cloud organization and billing account before going forward.
 
-Notice: since I am not using a service account to run Terraform, I have created the billing budget and notifications manually.
+Notice: since I am not using a service account to run Terraform, these steps need to done manually:
+
+- Create billing budget and notifications
+- Enable Firebase API
 
 ### Configure the gcloud SDK
 Setup the gcloud tool in order to easily deploy changes to the infrastructure.
@@ -41,10 +44,7 @@ Setup the gcloud tool in order to easily deploy changes to the infrastructure.
 - Set the project name with `gcloud config set project <your-prefix>-syn` (replace `<your-prefix>`)
 
 ### Terraform
-Terraform is configured to use a Google Cloud Storage bucket for saving state. Furthermore, the `owner` role is given to the organization admin for simplicity. A `terraform` service account is also created and the project owner has impersonation rights to it. The service account can be impersonated during `plan` and `apply` by prepending (replace `<your-project>` with your project ID) the command with:
-```shell
-GOOGLE_IMPERSONATE_SERVICE_ACCOUNT=terraform@<your-project>.iam.gserviceaccount.com
-```
+Terraform is configured to use a Google Cloud Storage bucket for saving state. Furthermore, the `owner` role is given to the organization admin for simplicity. Using a `terraform` service account would be a better practice
 
 The `terraform/raspberrypi.tf` configuration, via SSH:
 - Installs `motion` and `gcloud` on the Raspberry Pi
@@ -74,3 +74,4 @@ The Makefile contains the following commands to make development easier:
 ## TODO
 - configure IFTTT
 - check that file is an image
+- TF service account
