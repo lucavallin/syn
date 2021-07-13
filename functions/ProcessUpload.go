@@ -20,8 +20,13 @@ type GCSEvent struct {
 	Name   string `json:"name"`
 }
 
+type File struct {
+	Bucket string `json:"bucket"`
+	Name string `json:"name"`
+}
+
 type Upload struct {
-	Event GCSEvent `json:"event"`
+	File `json:"file"`
 	Labels []*vision3.EntityAnnotation `json:"labels"`
 }
 
@@ -30,13 +35,6 @@ func ProcessUpload(ctx context.Context, e GCSEvent) error {
 	log.Printf("Processing upload: %s", e.Name)
 	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
 
-	// Uploads are stored to Firestore only if Vision API returns at least one of these labels (comma-separated)
-	acceptedLabels := strings.Split(strings.ToLower(os.Getenv("ACCEPTED_LABELS")), ",")
-	if len(acceptedLabels) == 0 {
-		log.Printf("Upload rejected: No ACCEPTED_LABELS provided")
-		return nil
-	}
-
 	gcs, err := storage.NewClient(ctx)
 	if err != nil {
 		return err
@@ -44,9 +42,19 @@ func ProcessUpload(ctx context.Context, e GCSEvent) error {
 	defer gcs.Close()
 
 	object := gcs.Bucket(e.Bucket).Object(e.Name)
-
 	rc, err := object.NewReader(ctx)
 	defer rc.Close()
+
+	// Uploads are stored to Firestore only if Vision API returns at least one of these labels (comma-separated)
+	acceptedLabels := strings.Split(strings.ToLower(os.Getenv("ACCEPTED_LABELS")), ",")
+	if len(acceptedLabels) == 0 {
+		log.Printf("Upload rejected: No ACCEPTED_LABELS provided")
+		if err := object.Delete(ctx); err != nil {
+			log.Printf("Failed to delete upload: %s", e.Name)
+			return err
+		}
+		return nil
+	}
 
 	// Creates a client.
 	labeler, err := vision.NewImageAnnotatorClient(ctx)
@@ -73,6 +81,7 @@ func ProcessUpload(ctx context.Context, e GCSEvent) error {
 		log.Printf("Upload deleted: no allowed labels detected")
 		if err := object.Delete(ctx); err != nil {
 			log.Printf("Failed to delete upload: %s", e.Name)
+			return err
 		}
 		return nil
 	}
@@ -84,7 +93,10 @@ func ProcessUpload(ctx context.Context, e GCSEvent) error {
 
 	uploads := firestore.Collection("Uploads")
 	doc, _, err := uploads.Add(ctx, Upload{
-		Event: e,
+		File: File{
+			Bucket: e.Bucket,
+			Name: e.Name,
+		},
 		Labels:  labels,
 	})
 	if err != nil {
