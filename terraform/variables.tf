@@ -34,3 +34,13 @@ variable "accepted_labels" {
   type        = string
   description = "Uploads are stored to Firestore only if Vision API returns at least one of these labels (comma-separated)"
 }
+
+variable "ifttt_webhook_key" {
+  type        = string
+  description = "Key for calling IFTTT webhooks"
+}
+
+variable "ifttt_event_name" {
+  type        = string
+  description = "Event name for calling IFTTT webhooks"
+}

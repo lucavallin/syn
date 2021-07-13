@@ -67,6 +67,9 @@ Terraform creates a new repository on Google Cloud Source Repositories where to 
 - Add the remote to this repository: `git remote add google https://source.developers.google.com/p/<your-project>/r/syn`. Replace `<your-project>` with the correct name.
 - Push changes with `git push --all google`
 
+## IFTTT
+The project currently sends detection notifications via IFTTT webhooks. Once you have the event name and the webhook key, you can configure these with Terraform. The Notify function uses this information to trigger a notification.
+
 ## Makefile
 The Makefile contains the following commands to make development easier:
 - `make ssh`: Easily connect over SSH to the Raspberry Pi

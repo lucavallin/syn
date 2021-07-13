@@ -44,6 +44,8 @@ resource "google_cloudfunctions_function" "process_upload" {
   environment_variables = {
     "GOOGLE_CLOUD_PROJECT" : data.google_project.this.project_id
     "ACCEPTED_LABELS" : var.accepted_labels
+    "IFTTT_WEBHOOK_KEY" : var.ifttt_webhook_key
+    "IFTTT_EVENT_NAME" : var.ifttt_event_name
   }
 }
 
