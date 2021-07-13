@@ -16,11 +16,7 @@ These steps are required to get started with the project:
 ### Motion 
 Motion is a highly configurable program that monitors video signals from many types of cameras. I have made the following changes to the included `motion.conf` file (compared to the default configuration):
 
-- Uncomment the `mmalcam_name vc.ril.camera` parameter
 - Enable and set `target_dir` to `/home/pi/syn`
-- Set `ffmpeg_output_movies` to `off`
-- Set `stream_localhost` to `off`
-- Set `webcontrol_localhost` to `off`
 - Set `width` to `640` and `height` to `480`
 - Set `locate_motion_mode` to `preview`
 - Set `locate_motion_style` to `redbox`
