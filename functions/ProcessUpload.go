@@ -11,23 +11,25 @@ import (
 	"log"
 	"os"
 	"strings"
+	"time"
 )
 
 // GCSEvent is the payload of a GCS event. Please refer to the docs for
 // additional information regarding GCS events.
 type GCSEvent struct {
-	Bucket string `json:"bucket"`
+	Bucket string `json:"bucket" firestore`
 	Name   string `json:"name"`
 }
 
 type File struct {
-	Bucket string `json:"bucket"`
-	Name string `json:"name"`
+	Bucket string `json:"bucket" firestore:"bucket"`
+	Name string `json:"name" firestore:"name"`
 }
 
 type Upload struct {
-	File `json:"file"`
-	Labels []*vision3.EntityAnnotation `json:"labels"`
+	File `json:"file" firestore:"file"`
+	Labels []*vision3.EntityAnnotation `json:"labels" firestore:"labels"`
+	Created time.Time `json:"created" firestore:"created"`
 }
 
 // ProcessUpload prints a message when a file is changed in a Cloud Storage bucket.
@@ -42,7 +44,15 @@ func ProcessUpload(ctx context.Context, e GCSEvent) error {
 	defer gcs.Close()
 
 	object := gcs.Bucket(e.Bucket).Object(e.Name)
+	objectAttrs, err := object.Attrs(ctx)
+	if err != nil {
+		return err
+	}
+
 	rc, err := object.NewReader(ctx)
+	if err != nil {
+		return err
+	}
 	defer rc.Close()
 
 	// Uploads are stored to Firestore only if Vision API returns at least one of these labels (comma-separated)
@@ -94,10 +104,11 @@ func ProcessUpload(ctx context.Context, e GCSEvent) error {
 	uploads := firestore.Collection("Uploads")
 	doc, _, err := uploads.Add(ctx, Upload{
 		File: File{
-			Bucket: e.Bucket,
-			Name: e.Name,
+			Bucket: object.BucketName(),
+			Name: object.ObjectName(),
 		},
 		Labels:  labels,
+		Created: objectAttrs.Created,
 	})
 	if err != nil {
 		return err
