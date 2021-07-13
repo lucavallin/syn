@@ -11,7 +11,6 @@ import (
 	vision3 "google.golang.org/genproto/googleapis/cloud/vision/v1"
 	"log"
 	"os"
-	"strings"
 )
 
 // GCSEvent is the payload of a GCS event. Please refer to the docs for
