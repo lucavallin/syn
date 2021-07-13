@@ -1,11 +1,11 @@
 # syn
 Visual monitoring using the Raspberry Pi, Google Cloud and React Native.
 
-## Raspberry Pi
-I have used the following components for the Raspberry Pi:
-- `Raspberry Pi & Camera`
-- `Zero View camera mount`: https://thepihut.com/products/zeroview
-- `Raspberry Pi Zero Camera Adapter`: https://thepihut.com/products/raspberry-pi-zero-camera-adapter
+## Raspberry Pi Components
+The project requires the following components for the Raspberry Pi:
+- **Raspberry Pi & Camera**
+- **Zero View camera mount**: https://thepihut.com/products/zeroview
+- **Raspberry Pi Zero Camera Adapter**: https://thepihut.com/products/raspberry-pi-zero-camera-adapter
 
 ### Setup
 These steps are required to get started with the project:
@@ -41,11 +41,10 @@ Setup the gcloud tool in order to easily deploy changes to the infrastructure.
 - Set the project name with `gcloud config set project <your-prefix>-syn` (replace `<your-prefix>`)
 
 ### Terraform
-Terraform is configured to use a Google Cloud Storage bucket for saving state. Furthermore, the `owner` role is given to the organization admin for simplicity (far from being a best practice, but ok for a fun project).
-The following aspects are taken care of:
-- Project creation
-- Setup of IAM bindings
-- Terraform state storage bucket
+Terraform is configured to use a Google Cloud Storage bucket for saving state. Furthermore, the `owner` role is given to the organization admin for simplicity. A `terraform` service account is also created and the project owner has impersonation rights to it. The service account can be impersonated during `plan` and `apply` by prepending (replace `<your-project>` with your project ID) the command with:
+```shell
+GOOGLE_IMPERSONATE_SERVICE_ACCOUNT=terraform@<your-project>.iam.gserviceaccount.com
+```
 
 The `terraform/raspberrypi.tf` configuration, via SSH:
 - Installs `motion` and `gcloud` on the Raspberry Pi
@@ -73,5 +72,5 @@ The Makefile contains the following commands to make development easier:
 - `make ssh`: Easily connect over SSH to the Raspberry Pi
 
 ## TODO
-- Use signed URLs
-- use firebase
+- configure IFTTT
+- check that file is an image

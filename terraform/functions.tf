@@ -63,8 +63,8 @@ resource "google_cloudfunctions_function" "notify" {
   }
 
   event_trigger {
-    event_type = "providers/cloud.firestore/eventTypes/document.create"
-    resource   = google_storage_bucket.uploads.name
+    event_type = "providers/google.firebase.database/eventTypes/ref.create"
+    resource   = google_firebase_project.this.project
   }
 
   environment_variables = {
