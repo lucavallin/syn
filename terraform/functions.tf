@@ -43,6 +43,7 @@ resource "google_cloudfunctions_function" "process_upload" {
 
   environment_variables = {
     "GOOGLE_CLOUD_PROJECT" : data.google_project.this.project_id
+    "ALLOWED_LABELS" : var.allowed_labels
   }
 }
 
@@ -64,7 +65,7 @@ resource "google_cloudfunctions_function" "notify" {
 
   event_trigger {
     event_type = "providers/cloud.firestore/eventTypes/document.create"
-    resource   = "projects/${data.google_project.this.project_id}/databases/(default)/documents/collection/Uploads"
+    resource   = "Uploads/{ids}"
   }
 
   environment_variables = {

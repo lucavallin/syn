@@ -6,6 +6,7 @@ import (
 	"cloud.google.com/go/storage"
 	vision "cloud.google.com/go/vision/apiv1"
 	"context"
+	"github.com/thoas/go-funk"
 	vision3 "google.golang.org/genproto/googleapis/cloud/vision/v1"
 	"log"
 	"os"
@@ -27,6 +28,7 @@ type Upload struct {
 func ProcessUpload(ctx context.Context, e GCSEvent) error {
 	log.Printf("Processing file: %s", e.Name)
 	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
+	allowed_labels := os.Getenv("ALLOWED_LABELS")
 
 	gcs, err := storage.NewClient(ctx)
 	if err != nil {
@@ -54,6 +56,15 @@ func ProcessUpload(ctx context.Context, e GCSEvent) error {
 	labels, err := labeler.DetectLabels(ctx, image, nil, 10)
 	if err != nil {
 		return err
+	}
+
+	// Reject images that don't contain the allowed labels
+	allowed := funk.Contains(labels, func(l *vision3.EntityAnnotation) bool {
+		return funk.Contains(allowed_labels, l.Description)
+	})
+	if !allowed {
+		log.Printf("Upload rejected: no allowed labels detected")
+		return nil
 	}
 
 	firestore, err := firestore.NewClient(ctx, projectID)
