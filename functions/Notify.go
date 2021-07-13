@@ -2,9 +2,7 @@
 package functions
 
 import (
-	"cloud.google.com/go/functions/metadata"
 	"context"
-	"fmt"
 	"log"
 	"time"
 )
@@ -29,14 +27,16 @@ type FirestoreValue struct {
 	UpdateTime time.Time   `json:"updateTime"`
 }
 
+// IftttNotification represents a notification to IFTTT
+type IftttNotification struct {
+	Value1 string `json:"value1"`
+	Value2 string `json:"value2"`
+	Value3 string `json:"value3"`
+}
+
 // Notify is triggered by a change to a Firestore document.
 func Notify(ctx context.Context, e FirestoreEvent) error {
-	meta, err := metadata.FromContext(ctx)
-	if err != nil {
-		return fmt.Errorf("metadata.FromContext: %v", err)
-	}
-	log.Printf("Function triggered by change to: %v", meta.Resource)
-	log.Printf("Old value: %+v", e.OldValue)
+	//iftttWebhookUrl := os.Getenv("IFTTT_WEBHOOK_URL")
 	log.Printf("New value: %+v", e.Value)
 	return nil
 }

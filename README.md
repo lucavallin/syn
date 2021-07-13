@@ -68,7 +68,7 @@ Terraform creates a new repository on Google Cloud Source Repositories where to 
 - Push changes with `git push --all google`
 
 ## IFTTT
-The project currently sends detection notifications via IFTTT webhooks. Once you have the event name and the webhook key, you can configure these with Terraform. The Notify function uses this information to trigger a notification.
+The project currently sends detection notifications to the IFTTT app via IFTTT webhooks. The webhook URL can be configured via Terraform and it looks like this: `https://maker.ifttt.com/trigger/<event-name>/with/key/<key>`. Replace `<event-name>` and `<key>` with your information.
 
 ## Makefile
 The Makefile contains the following commands to make development easier:
