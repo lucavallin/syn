@@ -30,7 +30,7 @@ variable "raspberry_pi_host" {
   description = "IP for SSH connection to the Raspberry Pi"
 }
 
-variable "allowed_labels" {
-  type        = list(string)
-  description = "The ProcessUpload Cloud Function will only store uploads in Firestore if at least one of these labels is found by Vision API"
+variable "accepted_labels" {
+  type        = string
+  description = "Uploads are stored to Firestore only if Vision API returns at least one of these labels (comma-separated)"
 }
