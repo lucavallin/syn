@@ -45,7 +45,7 @@ func ProcessUpload(ctx context.Context, e GCSEvent) error {
 	defer rc.Close()
 
 	// Uploads are stored to Firestore only if Vision API returns at least one of these labels (comma-separated)
-	acceptedLabels := strings.Split(strings.ToLower(os.Getenv("ACCEPTED_LABELS")), ",")
+	acceptedLabels := syn.CleanLabels(os.Getenv("ACCEPTED_LABELS"))
 	if len(acceptedLabels) == 0 {
 		log.Printf("Deleting upload: No ACCEPTED_LABELS provided")
 		if err := object.Delete(ctx); err != nil {

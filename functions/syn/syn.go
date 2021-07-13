@@ -1,6 +1,7 @@
 package syn
 
 import (
+	"strings"
 	"time"
 )
 
@@ -18,4 +19,11 @@ type Upload struct {
 	File `json:"file" firestore:"file"`
 	Labels []Label `json:"labels" firestore:"labels"`
 	Created time.Time `json:"created" firestore:"created"`
+}
+
+func CleanLabels(labels string) []string {
+	lowerLabels := strings.ToLower(labels)
+	labelsWithoutWhitespaces := strings.ReplaceAll(lowerLabels, " ", "")
+
+	return strings.Split(labelsWithoutWhitespaces, ",")
 }
