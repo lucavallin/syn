@@ -75,6 +75,6 @@ The Makefile contains the following commands to make development easier:
 - `make ssh`: Easily connect over SSH to the Raspberry Pi
 
 ## TODO
-- configure IFTTT
 - check that file is an image
 - TF service account
+- delete bucket objects if rejected

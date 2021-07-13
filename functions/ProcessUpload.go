@@ -27,7 +27,7 @@ type Upload struct {
 
 // ProcessUpload prints a message when a file is changed in a Cloud Storage bucket.
 func ProcessUpload(ctx context.Context, e GCSEvent) error {
-	log.Printf("Processing file: %s", e.Name)
+	log.Printf("Processing upload: %s", e.Name)
 	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
 
 	// Uploads are stored to Firestore only if Vision API returns at least one of these labels (comma-separated)
@@ -70,7 +70,10 @@ func ProcessUpload(ctx context.Context, e GCSEvent) error {
 		return funk.Contains(acceptedLabels, l.Description)
 	})
 	if !allowed {
-		log.Printf("Upload rejected: no allowed labels detected")
+		log.Printf("Upload deleted: no allowed labels detected")
+		if err := object.Delete(ctx); err != nil {
+			log.Printf("Failed to delete upload: %s", e.Name)
+		}
 		return nil
 	}
 
