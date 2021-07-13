@@ -77,3 +77,4 @@ The Makefile contains the following commands to make development easier:
 ## TODO
 - check that file is an image
 - programmatic bucket on raspberry pi
+- replace Firestore events with PubSub?
