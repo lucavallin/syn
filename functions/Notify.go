@@ -52,7 +52,7 @@ func Notify(ctx context.Context, e FirestoreEvent) error {
 		return err
 	}
 
-	log.Printf("Notification sent to IFTTT: %v", json)
+	log.Printf("Notification sent to IFTTT: %v", notification)
 
 	return nil
 }
