@@ -3,6 +3,7 @@ package functions
 
 import (
 	"bytes"
+	"cavall.in/syn/syn"
 	"context"
 	"encoding/json"
 	"log"
@@ -23,10 +24,7 @@ type FirestoreEvent struct {
 // FirestoreValue holds Firestore fields.
 type FirestoreValue struct {
 	CreateTime time.Time `json:"createTime"`
-	// Fields is the data for this value. The type depends on the format of your
-	// database. Log the interface{} value and inspect the result to see a JSON
-	// representation of your database fields.
-	Fields     interface{} `json:"fields"`
+	Fields     syn.Upload  `json:"fields"`
 	Name       string      `json:"name"`
 	UpdateTime time.Time   `json:"updateTime"`
 }
@@ -43,7 +41,6 @@ func Notify(ctx context.Context, e FirestoreEvent) error {
 	iftttWebhookUrl := os.Getenv("IFTTT_WEBHOOK_URL")
 
 	log.Printf("Event received: %v", e.Value.Fields)
-
 
 	notification, _ := json.Marshal(IftttNotification{
 		Labels: "Hello",
