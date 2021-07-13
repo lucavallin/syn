@@ -75,7 +75,7 @@ func ProcessUpload(ctx context.Context, e GCSEvent) error {
 		return err
 	}
 
-	detectedLabels, err := labeler.DetectLabels(ctx, image, nil, 10)
+	detectedLabels, err := labeler.DetectLabels(ctx, image, nil, 5)
 	if err != nil {
 		return err
 	}
