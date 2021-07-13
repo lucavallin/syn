@@ -21,13 +21,6 @@ type Upload struct {
 	Created time.Time `json:"created" firestore:"created"`
 }
 
-func CleanLabels(labels string) []string {
-	lowerLabels := strings.ToLower(labels)
-	labelsWithoutWhitespaces := strings.ReplaceAll(lowerLabels, " ", "")
-
-	return strings.Split(labelsWithoutWhitespaces, ",")
-}
-
 func NewLabel(description string, score float32) Label {
-	return Label{description, score}
+	return Label{strings.ToLower(description), score}
 }

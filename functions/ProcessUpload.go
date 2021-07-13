@@ -12,6 +12,7 @@ import (
 	vision3 "google.golang.org/genproto/googleapis/cloud/vision/v1"
 	"log"
 	"os"
+	"strings"
 )
 
 // GCSEvent is the payload of a GCS event. Please refer to the docs for
@@ -45,7 +46,7 @@ func ProcessUpload(ctx context.Context, e GCSEvent) error {
 	defer rc.Close()
 
 	// Uploads are stored to Firestore only if Vision API returns at least one of these labels (comma-separated)
-	acceptedLabels := syn.CleanLabels(os.Getenv("ACCEPTED_LABELS"))
+	acceptedLabels := cleanLabels(os.Getenv("ACCEPTED_LABELS"))
 	if len(acceptedLabels) == 0 {
 		log.Printf("Deleting upload: No ACCEPTED_LABELS provided")
 		if err := object.Delete(ctx); err != nil {
@@ -113,4 +114,11 @@ func ProcessUpload(ctx context.Context, e GCSEvent) error {
 	log.Printf("Created Firestore document: %s", doc.ID)
 
 	return nil
+}
+
+func cleanLabels(labels string) []string {
+	lowerLabels := strings.ToLower(labels)
+	labelsWithoutWhitespaces := strings.ReplaceAll(lowerLabels, " ", "")
+
+	return strings.Split(labelsWithoutWhitespaces, ",")
 }
