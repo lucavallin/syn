@@ -9,7 +9,7 @@ resource "google_service_account" "functions" {
 
 resource "google_storage_bucket_iam_binding" "functions" {
   bucket = google_storage_bucket.uploads.name
-  role   = "roles/storage.objectViewer"
+  role   = "roles/storage.objectAdmin"
   members = [
     "serviceAccount:${google_service_account.functions.email}",
   ]

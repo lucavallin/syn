@@ -22,14 +22,3 @@ resource "google_storage_bucket" "uploads" {
   location                    = "europe-west4"
   uniform_bucket_level_access = true
 }
-
-#
-# Allow the Raspberry Pi service account to write to the bucket
-#
-resource "google_storage_bucket_iam_binding" "raspberry_pi" {
-  bucket = google_storage_bucket.uploads.name
-  role   = "roles/storage.objectCreator"
-  members = [
-    "serviceAccount:${google_service_account.raspberrypi.email}",
-  ]
-}
