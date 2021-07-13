@@ -2,8 +2,12 @@
 package functions
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"log"
+	"net/http"
+	"os"
 	"time"
 )
 
@@ -29,14 +33,26 @@ type FirestoreValue struct {
 
 // IftttNotification represents a notification to IFTTT
 type IftttNotification struct {
-	Value1 string `json:"value1"`
-	Value2 string `json:"value2"`
-	Value3 string `json:"value3"`
+	Labels string `json:"value1,omitempty"`
+	ImageUrl string `json:"value2,omitempty"`
 }
 
 // Notify is triggered by a change to a Firestore document.
 func Notify(ctx context.Context, e FirestoreEvent) error {
-	//iftttWebhookUrl := os.Getenv("IFTTT_WEBHOOK_URL")
-	log.Printf("New value: %+v", e.Value)
+	log.Printf("Event received: %v", e)
+	iftttWebhookUrl := os.Getenv("IFTTT_WEBHOOK_URL")
+
+	notification, _ := json.Marshal(IftttNotification{
+		Labels: "Hello",
+		ImageUrl: "",
+	})
+
+	_, err := http.Post(iftttWebhookUrl, "application/json", bytes.NewBuffer(notification))
+	if err != nil {
+		return err
+	}
+
+	log.Printf("Notification sent to IFTTT: %v", json)
+
 	return nil
 }
