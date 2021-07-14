@@ -4,11 +4,13 @@ package functions
 import (
 	"bytes"
 	"cavall.in/syn/events"
+	"cavall.in/syn/syn"
 	"context"
 	"encoding/json"
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -37,13 +39,15 @@ type IftttNotification struct {
 
 // Notify is triggered by a change to a Firestore document.
 func Notify(ctx context.Context, e FirestoreEvent) error {
-	log.Printf("Event received: %v", e)
+	log.Printf("Event received: %v", e.Value.Name)
 	iftttWebhookUrl := os.Getenv("IFTTT_WEBHOOK_URL")
 
-	log.Printf("Event received: %s", e.Value.Fields.File.MapValue.Fields.Bucket)
+	labels := funk.Map(e.Value.Fields.Labels.ArrayValue.Values, func(v interface{}) string {
+		return v.MapValue.Fields.Value.Description
+	}).([]string)
 
 	notification, _ := json.Marshal(IftttNotification{
-		Labels: "Hello",
+		Labels: strings.Join(labels, ", "),
 		ImageUrl: "",
 	})
 
