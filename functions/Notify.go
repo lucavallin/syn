@@ -4,10 +4,8 @@ package functions
 import (
 	"bytes"
 	"cavall.in/syn/events"
-	"cavall.in/syn/syn"
 	"context"
 	"encoding/json"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/thoas/go-funk"
 	"log"
 	"net/http"
@@ -44,10 +42,8 @@ func Notify(ctx context.Context, e FirestoreEvent) error {
 	log.Printf("Event received: %v", e.Value.Name)
 	iftttWebhookUrl := os.Getenv("IFTTT_WEBHOOK_URL")
 
-	spew.Dump(e.Value.Fields.Labels.ArrayValue.Values)
-
-	labels := funk.Map(e.Value.Fields.Labels, func(l syn.Label) string {
-		return l.Description
+	labels := funk.Map(e.Value.Fields.Labels.ArrayValue.Values, func(l events.LabelsMapValue) string {
+		return l.MapValue.Fields.Description.StringValue
 	}).([]string)
 
 	notification, _ := json.Marshal(IftttNotification{

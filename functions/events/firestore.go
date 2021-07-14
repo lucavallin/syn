@@ -19,20 +19,34 @@ type FirestoreUpload struct {
 			} `json:"fields"`
 		} `json:"mapValue"`
 	} `json:"file"`
-	Labels struct {
-		ArrayValue struct {
-			Values []struct {
-				MapValue struct {
-					Fields struct {
-						Description struct {
-							StringValue string `json:"stringValue"`
-						} `json:"description"`
-						Score struct {
-							DoubleValue float64 `json:"doubleValue"`
-						} `json:"score"`
-					} `json:"fields"`
-				} `json:"mapValue"`
-			} `json:"values"`
-		} `json:"arrayValue"`
-	} `json:"labels"`
+	Labels Labels `json:"labels"`
+}
+
+type Labels struct {
+	ArrayValue LabelArrayValue `json:"arrayValue"`
+}
+
+type LabelArrayValue struct {
+	Values []LabelValues `json:"values"`
+}
+
+type LabelValues struct {
+	MapValue LabelsMapValue `json:"mapValue"`
+}
+
+type LabelsMapValue struct {
+	Fields LabelFields `json:"fields"`
+}
+
+type LabelFields struct {
+	Description LabelDescription `json:"description"`
+	Score LabelScore `json:"score"`
+}
+
+type LabelDescription struct {
+	StringValue string `json:"stringValue"`
+}
+
+type LabelScore struct {
+	DoubleValue float64 `json:"doubleValue"`
 }
