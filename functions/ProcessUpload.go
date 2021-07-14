@@ -81,8 +81,7 @@ func ProcessUpload(ctx context.Context, e GCSEvent) error {
 	}
 
 	//
-	// Transform resulting labels and check if they contain at least
-	// one of the allowed labels
+	// Transform resulting labels and check if they contain at least one of the allowed labels
 	//
 	labels := funk.Map(detectedLabels, func(l *vision3.EntityAnnotation) syn.Label {
 		return syn.NewLabel(l.Description, l.Score)

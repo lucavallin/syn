@@ -4,9 +4,9 @@ package functions
 import (
 	"bytes"
 	"cavall.in/syn/events"
-	"cavall.in/syn/syn"
 	"context"
 	"encoding/json"
+	"github.com/thoas/go-funk"
 	"log"
 	"net/http"
 	"os"
@@ -42,16 +42,20 @@ func Notify(ctx context.Context, e FirestoreEvent) error {
 	log.Printf("Event received: %v", e.Value.Name)
 	iftttWebhookUrl := os.Getenv("IFTTT_WEBHOOK_URL")
 
-	labels := funk.Map(e.Value.Fields.Labels.ArrayValue.Values, func(v interface{}) string {
+	labels := funk.Map(e.Value.Fields.Labels.ArrayValue.Values, func(v events.Label) string {
 		return v.MapValue.Fields.Value.Description
 	}).([]string)
 
-	notification, _ := json.Marshal(IftttNotification{
+	notification := IftttNotification{
+		Labels: strings.Join(labels, ", "),
+		ImageUrl: "",
+	}
+	jsonNotification, _ := json.Marshal(IftttNotification{
 		Labels: strings.Join(labels, ", "),
 		ImageUrl: "",
 	})
 
-	_, err := http.Post(iftttWebhookUrl, "application/json", bytes.NewBuffer(notification))
+	_, err := http.Post(iftttWebhookUrl, "application/json", bytes.NewBuffer(jsonNotification))
 	if err != nil {
 		return err
 	}
