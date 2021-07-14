@@ -43,6 +43,8 @@ func Notify(ctx context.Context, e FirestoreEvent) error {
 	log.Printf("Event received: %v", e.Value.Name)
 	iftttWebhookUrl := os.Getenv("IFTTT_WEBHOOK_URL")
 
+	log.Printf("Labels: %v", e.Value.Fields.Labels)
+
 	labels := funk.Map(e.Value.Fields.Labels, func(l syn.Label) string {
 		return l.Description
 	}).([]string)
