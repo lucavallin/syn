@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"reflect"
 	"strings"
 	"time"
 )
@@ -42,8 +43,9 @@ func Notify(ctx context.Context, e FirestoreEvent) error {
 	log.Printf("Event received: %v", e.Value.Name)
 	iftttWebhookUrl := os.Getenv("IFTTT_WEBHOOK_URL")
 
-	labels := funk.Map(e.Value.Fields.Labels, func(v events.Label) string {
-		return v.Description
+	type X = reflect.Type(e.Value.Fields.Labels[0])
+	labels := funk.Map(e.Value.Fields.Labels, func(l X) string {
+		return l.Description
 	}).([]string)
 
 	notification := IftttNotification{
