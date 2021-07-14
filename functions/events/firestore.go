@@ -2,6 +2,23 @@ package events
 
 import "time"
 
+//FirestoreEvent is the payload of a Firestore event.
+type FirestoreEvent struct {
+	OldValue   FirestoreValue `json:"oldValue"`
+	Value      FirestoreValue `json:"value"`
+	UpdateMask struct {
+		FieldPaths []string `json:"fieldPaths"`
+	} `json:"updateMask"`
+}
+
+// FirestoreValue holds Firestore fields.
+type FirestoreValue struct {
+	CreateTime time.Time `json:"createTime"`
+	Fields     FirestoreUpload  `json:"fields"`
+	Name       string      `json:"name"`
+	UpdateTime time.Time   `json:"updateTime"`
+}
+
 // FirestoreUpload represents a Firebase event of a new record in the Upload collection
 type FirestoreUpload struct {
 	Created Created `json:"created"`

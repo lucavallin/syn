@@ -11,25 +11,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 )
-
-//FirestoreEvent is the payload of a Firestore event.
-type FirestoreEvent struct {
-	OldValue   FirestoreValue `json:"oldValue"`
-	Value      FirestoreValue `json:"value"`
-	UpdateMask struct {
-		FieldPaths []string `json:"fieldPaths"`
-	} `json:"updateMask"`
-}
-
-// FirestoreValue holds Firestore fields.
-type FirestoreValue struct {
-	CreateTime time.Time `json:"createTime"`
-	Fields     events.FirestoreUpload  `json:"fields"`
-	Name       string      `json:"name"`
-	UpdateTime time.Time   `json:"updateTime"`
-}
 
 // IftttNotification represents a notification to IFTTT
 type IftttNotification struct {
@@ -38,7 +20,7 @@ type IftttNotification struct {
 }
 
 // Notify is triggered by a change to a Firestore document.
-func Notify(ctx context.Context, e FirestoreEvent) error {
+func Notify(ctx context.Context, e events.FirestoreEvent) error {
 	log.Printf("Event received: %v", e.Value.Name)
 	iftttWebhookUrl := os.Getenv("IFTTT_WEBHOOK_URL")
 
@@ -46,12 +28,15 @@ func Notify(ctx context.Context, e FirestoreEvent) error {
 		return l.MapValue.Fields.Description.StringValue
 	}).([]string)
 
-	notification, _ := json.Marshal(IftttNotification{
+	notification, err := json.Marshal(IftttNotification{
 		Labels: strings.Join(labels, ", "),
 		ImageUrl: "",
 	})
+	if err != nil {
+		return err
+	}
 
-	_, err := http.Post(iftttWebhookUrl, "application/json", bytes.NewBuffer(notification))
+	_, err = http.Post(iftttWebhookUrl, "application/json", bytes.NewBuffer(notification))
 	if err != nil {
 		return err
 	}
