@@ -6,6 +6,7 @@ require (
 	cloud.google.com/go v0.86.0
 	cloud.google.com/go/firestore v1.5.0
 	cloud.google.com/go/storage v1.16.0
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/kr/pretty v0.2.1 // indirect
 	github.com/thoas/go-funk v0.9.0
