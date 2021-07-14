@@ -1,6 +1,8 @@
 # syn
 Visual monitoring using the Raspberry Pi, Google Cloud and React Native.
 
+![](./docs/ifttt_notification.jpeg)
+
 ## Raspberry Pi Components
 The project requires the following components for the Raspberry Pi:
 - **Raspberry Pi & Camera**
@@ -78,3 +80,4 @@ The Makefile contains the following commands to make development easier:
 - refactor golang
 - work on native app
 - check vision api quota
+- describe how this flows
