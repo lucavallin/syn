@@ -3,7 +3,7 @@ package functions
 
 import (
 	"bytes"
-	"cavall.in/syn/syn"
+	"cavall.in/syn/events"
 	"context"
 	"encoding/json"
 	"log"
@@ -24,7 +24,7 @@ type FirestoreEvent struct {
 // FirestoreValue holds Firestore fields.
 type FirestoreValue struct {
 	CreateTime time.Time `json:"createTime"`
-	Fields     syn.Upload  `json:"fields"`
+	Fields     events.FirestoreUpload  `json:"fields"`
 	Name       string      `json:"name"`
 	UpdateTime time.Time   `json:"updateTime"`
 }
