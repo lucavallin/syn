@@ -1,5 +1,5 @@
 locals {
-  motion_config_source_path      = "raspberrypi/motion.conf"
+  motion_config_source_path      = "raspberrypi/motion.tmpl"
   motion_config_destination_path = "/etc/motion/motion.conf"
   sa_keys_source_path            = "raspberrypi/keys.json"
   sa_keys_destination_path       = "/home/pi/keys.json"
@@ -110,19 +110,19 @@ resource "google_service_account" "raspberrypi" {
 #
 # Copy motion configuration to the Raspberry Pi
 #
-//resource "null_resource" "raspberrypi_motion_config" {
-//  provisioner "file" {
-//    source      = local.motion_config_source_path
-//    destination = local.motion_config_destination_path
-//
-//    connection {
-//      type     = "ssh"
-//      user     = var.raspberry_pi_user
-//      password = var.raspberry_pi_password
-//      host     = var.raspberry_pi_host
-//    }
-//  }
-//}
+resource "null_resource" "raspberrypi_motion_config" {
+  provisioner "file" {
+    content     = templatefile(local.motion_config_source_path, { bucket_name = google_storage_bucket.uploads.url })
+    destination = local.motion_config_destination_path
+
+    connection {
+      type     = "ssh"
+      user     = var.raspberry_pi_user
+      password = var.raspberry_pi_password
+      host     = var.raspberry_pi_host
+    }
+  }
+}
 
 #
 # Allow the Raspberry Pi service account to write to the bucket

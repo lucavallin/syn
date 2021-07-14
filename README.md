@@ -23,6 +23,9 @@ Motion is a highly configurable program that monitors video signals from many ty
 - Set `event_gap` to `10`
 - Set `output_pictures` to `center`
 
+#### Uploading to the Storage Bucket
+Motion is configured to upload capture images to the Storage Bucket. The name of the bucket is set programmatically by Terraform by using the `templatefile` function.
+
 ## Infrastructure
 The `terraform` directory contains all of the infrastructure configuration required by the project.
 Make sure you already have a Google Cloud organization and billing account before going forward.
@@ -72,5 +75,3 @@ The Makefile contains the following commands to make development easier:
 
 ## TODO
 - check that file is an image
-- programmatic bucket on raspberry pi
-- replace Firestore events with PubSub?

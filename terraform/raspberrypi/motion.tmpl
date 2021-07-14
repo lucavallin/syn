@@ -606,7 +606,7 @@ quiet on
 
 # Command to be executed when a picture (.ppm|.jpg) is saved (default: none)
 # To give the filename as an argument to a command append it with %f
-on_picture_save gsutil cp %f gs://cvln-syn-images
+on_picture_save gsutil cp %f ${bucket_name}
 
 # Command to be executed when a motion frame is detected (default: none)
 ; on_motion_detected value
