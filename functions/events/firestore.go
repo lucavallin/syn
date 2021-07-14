@@ -4,22 +4,26 @@ import "time"
 
 // FirestoreUpload represents a Firebase event of a new record in the Upload collection
 type FirestoreUpload struct {
-	Created struct {
-		TimestampValue time.Time `json:"timestampValue"`
-	} `json:"created"`
-	File struct {
-		MapValue struct {
-			Fields struct {
-				Bucket struct {
-					StringValue string `json:"stringValue"`
-				} `json:"bucket"`
-				Name struct {
-					StringValue string `json:"stringValue"`
-				} `json:"name"`
-			} `json:"fields"`
-		} `json:"mapValue"`
-	} `json:"file"`
+	Created Created `json:"created"`
+	File File `json:"file"`
 	Labels Labels `json:"labels"`
+}
+
+type Created struct {
+	TimestampValue time.Time `json:"timestampValue"`
+}
+
+type File struct {
+	MapValue FileMapValue `json:"mapValue"`
+}
+
+type FileMapValue struct {
+	Fields FileFields `json:"fields"`
+}
+
+type FileFields struct {
+	Bucket StringValue `json:"bucket"`
+	Name StringValue `json:"name"`
 }
 
 type Labels struct {
@@ -39,14 +43,14 @@ type LabelsMapValue struct {
 }
 
 type LabelFields struct {
-	Description LabelDescription `json:"description"`
-	Score LabelScore `json:"score"`
+	Description StringValue `json:"description"`
+	Score DoubleValue `json:"score"`
 }
 
-type LabelDescription struct {
+type StringValue struct {
 	StringValue string `json:"stringValue"`
 }
 
-type LabelScore struct {
+type DoubleValue struct {
 	DoubleValue float64 `json:"doubleValue"`
 }

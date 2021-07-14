@@ -77,3 +77,4 @@ The Makefile contains the following commands to make development easier:
 - check that file is an image
 - refactor golang
 - work on native app
+- check vision api quota
