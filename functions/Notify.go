@@ -15,7 +15,7 @@ import (
 
 // IftttNotification represents a notification to IFTTT
 type IftttNotification struct {
-	Labels string `json:"value1"`
+	Labels   string `json:"value1"`
 	ImageUrl string `json:"value2"`
 }
 
@@ -29,7 +29,7 @@ func Notify(ctx context.Context, e events.FirestoreEvent) error {
 	}).([]string)
 
 	notification, err := json.Marshal(IftttNotification{
-		Labels: strings.Join(labels, ", "),
+		Labels:   strings.Join(labels, ", "),
 		ImageUrl: "",
 	})
 	if err != nil {

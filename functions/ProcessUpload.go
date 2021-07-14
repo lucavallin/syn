@@ -113,7 +113,7 @@ func ProcessUpload(ctx context.Context, e GCSEvent) error {
 	doc, _, err := uploads.Add(ctx, syn.Upload{
 		File: syn.File{
 			Bucket: object.BucketName(),
-			Name: object.ObjectName(),
+			Name:   object.ObjectName(),
 		},
 		Labels:  labels,
 		Created: objectAttrs.Created,
