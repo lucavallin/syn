@@ -1,7 +1,7 @@
-// Package functions contains Google Cloud Functions
 package functions
 
 import (
+	"cavall.in/syn/events"
 	"cavall.in/syn/syn"
 	"cloud.google.com/go/firestore"
 	"cloud.google.com/go/storage"
@@ -19,15 +19,9 @@ import (
 	"strings"
 )
 
-// GCSEvent is the payload of a GCS event
-type GCSEvent struct {
-	Bucket string `json:"bucket"`
-	Name   string `json:"name"`
-}
-
 // ProcessUpload labels images that have been uploaded to Cloud Storage
 // and saves the data into Firestore when the labels we want are found in the image
-func ProcessUpload(ctx context.Context, e GCSEvent) error {
+func ProcessUpload(ctx context.Context, e events.GCSEvent) error {
 	log.Printf("Processing upload: %s", e.Name)
 	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT_ID")
 	projectNumber := os.Getenv("GOOGLE_CLOUD_PROJECT_NUMBER")
