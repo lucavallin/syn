@@ -49,7 +49,6 @@ resource "google_cloudfunctions_function" "process_upload" {
 
   environment_variables = {
     "GOOGLE_CLOUD_PROJECT_ID" : data.google_project.this.project_id
-    "GOOGLE_CLOUD_PROJECT_NUMBER" : data.google_project.this.number
     "ACCEPTED_LABELS" : var.accepted_labels
   }
 }

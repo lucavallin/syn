@@ -1,15 +1,14 @@
 package functions
 
 import (
+	"cavall.in/syn/database"
 	"cavall.in/syn/events"
 	"cavall.in/syn/syn"
-	"cloud.google.com/go/firestore"
+	"cavall.in/syn/visionapi"
 	"cloud.google.com/go/storage"
-	vision "cloud.google.com/go/vision/apiv1"
 	"context"
 	"github.com/h2non/filetype"
 	"github.com/thoas/go-funk"
-	vision3 "google.golang.org/genproto/googleapis/cloud/vision/v1"
 	"io/ioutil"
 	"log"
 	"os"
@@ -20,8 +19,7 @@ import (
 // and saves the data into Firestore when the labels we want are found in the image
 func ProcessUpload(ctx context.Context, e events.GCSEvent) error {
 	log.Printf("Processing upload: %s", e.Name)
-	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT_ID")
-	projectNumber := os.Getenv("GOOGLE_CLOUD_PROJECT_NUMBER")
+	projectId := os.Getenv("GOOGLE_CLOUD_PROJECT_ID")
 
 	//
 	// Get object from Cloud Storage
@@ -55,10 +53,13 @@ func ProcessUpload(ctx context.Context, e events.GCSEvent) error {
 	}
 
 	//
-	// Clean allowed values and fail if none are provided
+	// Sanitize allowed labels and fail if none are provided
 	// Uploads are stored to Firestore only if Vision API finds at least one of the labels
 	//
-	acceptedLabels := cleanLabels(os.Getenv("ACCEPTED_LABELS"))
+	acceptedLabelsEnv := strings.Split(os.Getenv("ACCEPTED_LABELS"), ",")
+	acceptedLabels := funk.Map(acceptedLabelsEnv, func(l string) string {
+		return strings.ToLower(strings.TrimSpace(l))
+	}).([]string)
 	if len(acceptedLabels) == 0 {
 		log.Printf("Deleting upload: No ACCEPTED_LABELS provided")
 		if err := object.Delete(ctx); err != nil {
@@ -71,36 +72,19 @@ func ProcessUpload(ctx context.Context, e events.GCSEvent) error {
 	//
 	// Query Vision API
 	//
-	labeler, err := vision.NewImageAnnotatorClient(ctx)
-	if err != nil {
-		return err
-	}
-	defer labeler.Close()
-
-	image, err := vision.NewImageFromReader(rc)
+	visionApi, err := visionapi.NewClient(ctx)
 	if err != nil {
 		return err
 	}
 
-	detectedLabels, err := labeler.DetectLabels(ctx, image, nil, 5)
+	labels, err := visionApi.DetectImageLabels(rc)
 	if err != nil {
 		return err
 	}
 
-	//
-	// Transform resulting labels and check if they contain at least one of the allowed labels
-	//
-	labels := funk.Map(detectedLabels, func(l *vision3.EntityAnnotation) syn.Label {
-		return syn.NewLabel(l.Description, l.Score)
-	}).([]syn.Label)
-
-	allowed := funk.Contains(labels, func(l syn.Label) bool {
-		return -1 != funk.IndexOf(acceptedLabels, l.Description)
-	})
-	if !allowed {
-		log.Printf("Allowed: %v", acceptedLabels)
-		log.Printf("Found: %v", labels)
-		log.Printf("Deleting upload: no allowed labels detected")
+	var isAllowedLabel = func(l syn.Label) bool { return -1 != funk.IndexOf(acceptedLabels, l.Description) }
+	if !funk.Contains(labels, isAllowedLabel) {
+		log.Printf("Deleting upload: no allowed labels detected. Allowed: %v, Found: %v", acceptedLabels, labels)
 		if err := object.Delete(ctx); err != nil {
 			log.Printf("Failed to delete upload: %s", e.Name)
 			return err
@@ -109,35 +93,20 @@ func ProcessUpload(ctx context.Context, e events.GCSEvent) error {
 	}
 
 	//
-	// Store file (path) and labels to Firestore
+	// Store labeled uploads to Firestore
 	//
-	firestore, err := firestore.NewClient(ctx, projectID)
+	db, err := database.NewClient(ctx, projectId)
 	if err != nil {
 		return err
 	}
 
-	uploads := firestore.Collection("Uploads")
-	doc, _, err := uploads.Add(ctx, syn.Upload{
-		File: syn.File{
-			Bucket: object.BucketName(),
-			Name:   object.ObjectName(),
-		},
-		Labels:  labels,
-		Created: objectAttrs.Created,
-	})
+	data := syn.NewUpload(object.BucketName(), object.ObjectName(), labels, objectAttrs.Created)
+	docId, err := db.AddUpload(data)
 	if err != nil {
 		return err
 	}
 
-	log.Printf("Created Firestore document: %s", doc.ID)
+	log.Printf("Created Firestore document: %s", docId)
 
 	return nil
-}
-
-// cleanLabels trims the comma-separated allowed labels, makes them lowercase and splits them into a slice
-func cleanLabels(labels string) []string {
-	lowerLabels := strings.ToLower(labels)
-	labelsWithoutWhitespaces := strings.ReplaceAll(lowerLabels, " ", "")
-
-	return strings.Split(labelsWithoutWhitespaces, ",")
 }
