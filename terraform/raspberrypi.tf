@@ -1,8 +1,9 @@
 locals {
   motion_config_source_path      = "raspberrypi/motion.tmpl"
   motion_config_destination_path = "/etc/motion/motion.conf"
-  sa_keys_source_path            = "raspberrypi/keys.json"
   sa_keys_destination_path       = "/home/pi/keys.json"
+  init_script_source_path        = "raspberrypi/init.tmpl"
+  init_script_destination_path   = "/home/pi/init.sh"
 }
 
 #
@@ -15,88 +16,30 @@ resource "google_service_account" "raspberrypi" {
 }
 
 #
-# Install the gcloud SDK on the Raspberry Pi
+# Generate service account keys for the Raspberry Pi
 #
-resource "null_resource" "raspberrypi_gcloud" {
-  provisioner "remote-exec" {
-    inline = [
-      "sudo echo \"deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main\" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && sudo curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg  add - && sudo apt-get update -y && sudo apt-get install google-cloud-sdk -y"
-    ]
-
-    connection {
-      type     = "ssh"
-      user     = var.raspberry_pi_user
-      password = var.raspberry_pi_password
-      host     = var.raspberry_pi_host
-    }
-  }
+resource "google_service_account_key" "raspberrypi" {
+  service_account_id = google_service_account.raspberrypi.name
 }
 
 #
-# Generate service account keys for the Raspberry Pi
+# Allow the Raspberry Pi service account to write to the bucket
 #
-resource "null_resource" "raspberrypi_sa_keys" {
-  provisioner "local-exec" {
-    command = "gcloud iam service-accounts keys create ${local.sa_keys_source_path} --iam-account=${google_service_account.raspberrypi.email}"
-  }
+resource "google_storage_bucket_iam_binding" "raspberry_pi" {
+  bucket = google_storage_bucket.uploads.name
+  role   = "roles/storage.objectCreator"
+  members = [
+    "serviceAccount:${google_service_account.raspberrypi.email}",
+  ]
 }
 
 #
 # Copy service account keys to the Raspberry Pi
 #
-resource "null_resource" "raspberrypi_copy_sa_keys" {
+resource "null_resource" "raspberrypi_keys" {
   provisioner "file" {
-    source      = local.sa_keys_source_path
+    content     = google_service_account_key.raspberrypi.private_key
     destination = local.sa_keys_destination_path
-
-    connection {
-      type     = "ssh"
-      user     = var.raspberry_pi_user
-      password = var.raspberry_pi_password
-      host     = var.raspberry_pi_host
-    }
-  }
-}
-
-#
-# Generate service account keys for the Raspberry Pi
-#
-resource "null_resource" "delete_raspberrypi_sa_keys" {
-  depends_on = [null_resource.raspberrypi_copy_sa_keys]
-  provisioner "local-exec" {
-    command = "rm ${local.sa_keys_source_path}"
-  }
-}
-
-#
-# Authenticate the Raspberry Pi
-#
-resource "null_resource" "raspberrypi_sa_auth" {
-  provisioner "remote-exec" {
-    inline = [
-      "gcloud auth activate-service-account ${google_service_account.raspberrypi.email} --key-file=${local.sa_keys_destination_path}",
-    ]
-
-    connection {
-      type     = "ssh"
-      user     = var.raspberry_pi_user
-      password = var.raspberry_pi_password
-      host     = var.raspberry_pi_host
-    }
-  }
-}
-
-#
-# Install motion on the Raspberry Pi and set permissions
-#
-resource "null_resource" "raspberrypi_motion" {
-  provisioner "remote-exec" {
-    inline = [
-      "sudo apt install -y motion",
-      "sudo chown pi ${local.motion_config_destination_path}",
-      "sudo chown pi /var/log/motion",
-      "sudo chown pi /var/lib/motion",
-    ]
 
     connection {
       type     = "ssh"
@@ -125,12 +68,43 @@ resource "null_resource" "raspberrypi_motion_config" {
 }
 
 #
-# Allow the Raspberry Pi service account to write to the bucket
+# Install the gcloud SDK on the Raspberry Pi
 #
-resource "google_storage_bucket_iam_binding" "raspberry_pi" {
-  bucket = google_storage_bucket.uploads.name
-  role   = "roles/storage.objectCreator"
-  members = [
-    "serviceAccount:${google_service_account.raspberrypi.email}",
-  ]
+resource "null_resource" "raspberrypi_init_script" {
+  depends_on = [null_resource.raspberrypi_motion_config]
+  provisioner "file" {
+    content = templatefile(local.init_script_source_path, {
+      email              = google_service_account.raspberrypi.email
+      key_file           = local.sa_keys_destination_path
+      motion_config_path = local.motion_config_destination_path
+    })
+    destination = local.init_script_destination_path
+
+    connection {
+      type     = "ssh"
+      user     = var.raspberry_pi_user
+      password = var.raspberry_pi_password
+      host     = var.raspberry_pi_host
+    }
+  }
+}
+
+#
+# Run init.sh script
+#
+resource "null_resource" "raspberrypi_init" {
+  depends_on = [null_resource.raspberrypi_init_script]
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x ${local.init_script_destination_path}",
+      "bash ${local.init_script_destination_path}"
+    ]
+
+    connection {
+      type     = "ssh"
+      user     = var.raspberry_pi_user
+      password = var.raspberry_pi_password
+      host     = var.raspberry_pi_host
+    }
+  }
 }
