@@ -33,7 +33,7 @@ func ProcessUpload(ctx context.Context, e events.GCSEvent) error {
 		return err
 	}
 
-	spew.Dump(quota)
+	spew.Dump(quota.Config)
 
 	//
 	// Get object from Cloud Storage

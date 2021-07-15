@@ -15,6 +15,12 @@ resource "google_storage_bucket_iam_binding" "functions" {
   ]
 }
 
+resource "google_project_iam_member" "functions" {
+  project = data.google_project.this.project_id
+  role    = "roles/serviceusage.serviceUsageViewer"
+  member  = "serviceAccount:${google_service_account.functions.email}"
+}
+
 resource "google_sourcerepo_repository" "syn" {
   project = data.google_project.this.project_id
   name    = "syn"

@@ -16,11 +16,3 @@ resource "google_project_iam_member" "firestore_user" {
   role    = "roles/datastore.user"
   member  = "serviceAccount:${google_service_account.functions.email}"
 }
-
-#
-# Create new Firebase project - Requires running terraform with a Service Account
-#
-//resource "google_firebase_project" "this" {
-//  provider = google-beta
-//  project  = data.google_project.this.project_id
-//}
