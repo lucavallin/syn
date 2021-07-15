@@ -4,8 +4,6 @@ import (
 	"cloud.google.com/go/storage"
 	"context"
 	"fmt"
-	"github.com/h2non/filetype"
-	"io/ioutil"
 	"log"
 	"time"
 )
@@ -45,19 +43,6 @@ func (c *Client) GetObject(bucket string, name string) (*Object, error) {
 		Created: attrs.Created,
 		URI:     fmt.Sprintf("gs://%s/%s", object.BucketName(), object.ObjectName()),
 	}, nil
-}
-
-func (c *Client) IsImage(objectURI string) (bool, error) {
-	image, err := ioutil.ReadFile(objectURI)
-	if err != nil {
-		return false, err
-	}
-
-	if !filetype.IsImage(image) {
-		return false, nil
-	}
-
-	return true, nil
 }
 
 func (c *Client) Delete(object *Object) error {

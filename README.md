@@ -85,3 +85,5 @@ The project keep costs low in a number of ways:
 ## TODO
 - describe how this flows
 - use cloud iot?
+- mirror github repo
+- setup functions for local development and automated deployment

@@ -33,11 +33,6 @@ func ProcessUpload(ctx context.Context, e events.GCSEvent) error {
 		return err
 	}
 
-	if isImage, err := gcsClient.IsImage(object.URI); !isImage || err != nil {
-		log.Printf("Deleting upload: not an image")
-		return gcsClient.Delete(object)
-	}
-
 	//
 	// Sanitize allowed labels and fail if none are provided
 	// Uploads are stored to Firestore only if Vision API finds at least one of the labels
