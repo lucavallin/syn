@@ -36,11 +36,7 @@ func ProcessUpload(ctx context.Context, e events.GCSEvent) error {
 
 	if isImage, err := gcs.IsImage(rc); !isImage || err != nil {
 		log.Printf("Deleting upload: not an image")
-		if err := object.Delete(ctx); err != nil {
-			log.Printf("Failed to delete upload: %s", e.Name)
-			return err
-		}
-		return nil
+		return gcs.Delete(object)
 	}
 
 	//
@@ -54,11 +50,7 @@ func ProcessUpload(ctx context.Context, e events.GCSEvent) error {
 
 	if len(acceptedLabels) == 0 {
 		log.Printf("Deleting upload: No ACCEPTED_LABELS provided")
-		if err := object.Delete(ctx); err != nil {
-			log.Printf("Failed to delete upload: %s", e.Name)
-			return err
-		}
-		return nil
+		return gcs.Delete(object)
 	}
 
 	//
@@ -77,11 +69,7 @@ func ProcessUpload(ctx context.Context, e events.GCSEvent) error {
 	var isAllowedLabel = func(l syn.Label) bool { return -1 != funk.IndexOf(acceptedLabels, l.Description) }
 	if !funk.Contains(labels, isAllowedLabel) {
 		log.Printf("Deleting upload: no allowed labels detected. Allowed: %v, Found: %v", acceptedLabels, labels)
-		if err := object.Delete(ctx); err != nil {
-			log.Printf("Failed to delete upload: %s", e.Name)
-			return err
-		}
-		return nil
+		return gcs.Delete(object)
 	}
 
 	//

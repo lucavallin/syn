@@ -6,6 +6,7 @@ import (
 	"github.com/h2non/filetype"
 	"io"
 	"io/ioutil"
+	"log"
 )
 
 type Client struct {
@@ -48,4 +49,13 @@ func (c *Client) IsImage(reader io.Reader) (bool, error) {
 	}
 
 	return true, nil
+}
+
+func (c *Client) Delete(object *storage.ObjectHandle) error {
+	if err := object.Delete(c.ctx); err != nil {
+		log.Printf("Failed to delete upload: %s", object.ObjectName())
+		return err
+	}
+
+	return nil
 }
