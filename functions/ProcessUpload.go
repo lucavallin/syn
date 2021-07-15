@@ -32,7 +32,7 @@ func ProcessUpload(ctx context.Context, e GCSEvent) error {
 	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT_ID")
 	projectNumber := os.Getenv("GOOGLE_CLOUD_PROJECT_NUMBER")
 
-	serviceName := fmt.Sprintf("projects/%s/services/visionapi.googleapis.com", projectNumber)
+	serviceName := fmt.Sprintf("projects/%s/services/vision.googleapis.com", projectNumber)
 	serviceusageService, err := serviceusage.NewService(ctx)
 	x := serviceusageService.Services.Get(serviceName)
 	spew.Dump(x)
