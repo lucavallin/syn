@@ -1,7 +1,6 @@
+import React from 'react';
 import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NativeBaseProvider } from 'native-base';
 
 
@@ -15,12 +14,13 @@ export default function App() {
 
   if (!isLoadingComplete) {
     return null;
-  } else {
+  }
+
     return (
       <NativeBaseProvider>
           <Navigation colorScheme={colorScheme} />
           <StatusBar />
       </NativeBaseProvider>
     );
-  }
+  
 }
