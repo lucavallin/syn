@@ -75,6 +75,13 @@ The project currently sends detection notifications to the IFTTT app via IFTTT w
 The Makefile contains the following commands to make development easier:
 - `make ssh`: Easily connect over SSH to the Raspberry Pi
 
+## Costs
+The project keep costs low in a number of ways:
+- Images are only uploaded to the bucket when a movement is detected
+- Images that do not contain the desired labels (see `ALLOWED_LABELS` env in Terraform) are deleted
+- Billing budgets and alerts are set manually
+- I have been looking for a way to limit requests to the Vision API outside the free-tier limit, but I don't have a good way to do it yet.
+
 ## TODO
 - describe how this flows
 - use cloud iot?
