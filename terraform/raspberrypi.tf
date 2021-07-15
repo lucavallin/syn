@@ -37,8 +37,12 @@ resource "google_storage_bucket_iam_binding" "raspberry_pi" {
 # Copy service account keys to the Raspberry Pi
 #
 resource "null_resource" "raspberrypi_keys" {
+  triggers {
+    timestamp = timestamp()
+  }
+
   provisioner "file" {
-    content     = google_service_account_key.raspberrypi.private_key
+    content     = base64decode(google_service_account_key.raspberrypi.private_key)
     destination = local.sa_keys_destination_path
 
     connection {
@@ -54,6 +58,10 @@ resource "null_resource" "raspberrypi_keys" {
 # Copy motion configuration to the Raspberry Pi
 #
 resource "null_resource" "raspberrypi_motion_config" {
+  triggers {
+    timestamp = timestamp()
+  }
+
   provisioner "file" {
     content     = templatefile(local.motion_config_source_path, { bucket_name = google_storage_bucket.uploads.url })
     destination = local.motion_config_destination_path
@@ -72,6 +80,11 @@ resource "null_resource" "raspberrypi_motion_config" {
 #
 resource "null_resource" "raspberrypi_init_script" {
   depends_on = [null_resource.raspberrypi_motion_config]
+
+  triggers {
+    timestamp = timestamp()
+  }
+
   provisioner "file" {
     content = templatefile(local.init_script_source_path, {
       email              = google_service_account.raspberrypi.email
@@ -94,10 +107,15 @@ resource "null_resource" "raspberrypi_init_script" {
 #
 resource "null_resource" "raspberrypi_init" {
   depends_on = [null_resource.raspberrypi_init_script]
+
+  triggers {
+    timestamp = timestamp()
+  }
+
   provisioner "remote-exec" {
     inline = [
-      "chmod +x ${local.init_script_destination_path}",
-      "bash ${local.init_script_destination_path}"
+      "sudo chmod +x ${local.init_script_destination_path}",
+      "sudo bash ${local.init_script_destination_path}"
     ]
 
     connection {
