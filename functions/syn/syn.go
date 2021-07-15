@@ -14,17 +14,17 @@ type File struct {
 // labels from Vision API and a timestamp
 type Upload struct {
 	File    `json:"file" firestore:"file"`
-	Labels  []Label   `json:"labels" firestore:"labels"`
 	Created time.Time `json:"created" firestore:"created"`
+	Labels  []Label   `json:"labels" firestore:"labels"`
 }
 
-func NewUpload(bucket string, name string, labels []Label, created time.Time) *Upload {
+func NewUpload(bucket string, name string, created time.Time, labels []Label) *Upload {
 	return &Upload{
 		File: File{
 			Bucket: bucket,
 			Name:   name,
 		},
-		Labels:  labels,
 		Created: created,
+		Labels:  labels,
 	}
 }

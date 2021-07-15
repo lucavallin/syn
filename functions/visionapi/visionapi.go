@@ -4,10 +4,8 @@ import (
 	"cavall.in/syn/syn"
 	vision "cloud.google.com/go/vision/apiv1"
 	"context"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/thoas/go-funk"
 	visionTypes "google.golang.org/genproto/googleapis/cloud/vision/v1"
-	"io"
 )
 
 type Client struct {
@@ -24,14 +22,10 @@ func NewClient(ctx context.Context) (*Client, error) {
 	return &Client{ctx, connection}, nil
 }
 
-func (c *Client) DetectImageLabels(rc io.Reader) ([]syn.Label, error) {
-	image, err := vision.NewImageFromReader(rc)
-	if err != nil {
-		return nil, err
-	}
+func (c *Client) DetectImageLabels(imageUri string) ([]syn.Label, error) {
+	image := vision.NewImageFromURI(imageUri)
 
 	res, err := c.Connection.DetectLabels(c.ctx, image, nil, 5)
-	spew.Dump(res, err)
 	if err != nil {
 		return nil, err
 	}

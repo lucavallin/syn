@@ -3,16 +3,24 @@ package gcs
 import (
 	"cloud.google.com/go/storage"
 	"context"
+	"fmt"
 	"github.com/h2non/filetype"
-	"io"
 	"io/ioutil"
 	"log"
+	"time"
 )
 
 // Client is a wrapper around Cloud Storage to more easily read/write objects
 type Client struct {
 	ctx        context.Context
 	Connection *storage.Client
+}
+
+type Object struct {
+	Bucket  string
+	Name    string
+	Created time.Time
+	URI     string
 }
 
 func NewClient(ctx context.Context) (*Client, error) {
@@ -24,23 +32,23 @@ func NewClient(ctx context.Context) (*Client, error) {
 	return &Client{ctx, connection}, nil
 }
 
-func (c *Client) GetObject(bucket string, name string) (*storage.ObjectHandle, *storage.ObjectAttrs, *storage.Reader, error) {
+func (c *Client) GetObject(bucket string, name string) (*Object, error) {
 	object := c.Connection.Bucket(bucket).Object(name)
 	attrs, err := object.Attrs(c.ctx)
 	if err != nil {
-		return nil, nil, nil, err
+		return nil, err
 	}
 
-	rc, err := object.NewReader(c.ctx)
-	if err != nil {
-		return nil, nil, nil, err
-	}
-
-	return object, attrs, rc, nil
+	return &Object{
+		Bucket:  object.BucketName(),
+		Name:    object.ObjectName(),
+		Created: attrs.Created,
+		URI:     fmt.Sprintf("gs://%s/%s", object.BucketName(), object.ObjectName()),
+	}, nil
 }
 
-func (c *Client) IsImage(reader io.Reader) (bool, error) {
-	image, err := ioutil.ReadAll(reader)
+func (c *Client) IsImage(objectURI string) (bool, error) {
+	image, err := ioutil.ReadFile(objectURI)
 	if err != nil {
 		return false, err
 	}
@@ -52,9 +60,9 @@ func (c *Client) IsImage(reader io.Reader) (bool, error) {
 	return true, nil
 }
 
-func (c *Client) Delete(object *storage.ObjectHandle) error {
-	if err := object.Delete(c.ctx); err != nil {
-		log.Printf("Failed to delete upload: %s", object.ObjectName())
+func (c *Client) Delete(object *Object) error {
+	if err := c.Connection.Bucket(object.Bucket).Object(object.Name).Delete(c.ctx); err != nil {
+		log.Printf("Failed to delete upload: %s", object.Name)
 		return err
 	}
 
