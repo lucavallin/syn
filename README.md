@@ -76,8 +76,8 @@ The Makefile contains the following commands to make development easier:
 - `make ssh`: Easily connect over SSH to the Raspberry Pi
 
 ## TODO
-- check that file is an image
 - refactor golang
 - work on native app
 - check vision api quota
 - describe how this flows
+- use cloud iot?

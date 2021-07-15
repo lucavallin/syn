@@ -7,8 +7,13 @@ import (
 	"cloud.google.com/go/storage"
 	vision "cloud.google.com/go/vision/apiv1"
 	"context"
+	"fmt"
+	"github.com/davecgh/go-spew/spew"
+	"github.com/h2non/filetype"
 	"github.com/thoas/go-funk"
+	"google.golang.org/api/serviceusage/v1beta1"
 	vision3 "google.golang.org/genproto/googleapis/cloud/vision/v1"
+	"io/ioutil"
 	"log"
 	"os"
 	"strings"
@@ -24,7 +29,13 @@ type GCSEvent struct {
 // and saves the data into Firestore when the labels we want are found in the image
 func ProcessUpload(ctx context.Context, e GCSEvent) error {
 	log.Printf("Processing upload: %s", e.Name)
-	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
+	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT_ID")
+	projectNumber := os.Getenv("GOOGLE_CLOUD_PROJECT_NUMBER")
+
+	serviceName := fmt.Sprintf("projects/%s/services/visionapi.googleapis.com", projectNumber)
+	serviceusageService, err := serviceusage.NewService(ctx)
+	x := serviceusageService.Services.Get(serviceName)
+	spew.Dump(x)
 
 	//
 	// Get object from Cloud Storage
@@ -46,6 +57,16 @@ func ProcessUpload(ctx context.Context, e GCSEvent) error {
 		return err
 	}
 	defer rc.Close()
+
+	upload, err := ioutil.ReadAll(rc)
+	if err != nil {
+		return err
+	}
+
+	if !filetype.IsImage(upload) {
+		log.Printf("Deleting upload: not an image")
+		return nil
+	}
 
 	//
 	// Clean allowed values and fail if none are provided
