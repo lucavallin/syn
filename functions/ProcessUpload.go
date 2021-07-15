@@ -8,7 +8,6 @@ import (
 	vision "cloud.google.com/go/vision/apiv1"
 	"context"
 	"fmt"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/h2non/filetype"
 	"github.com/thoas/go-funk"
 	"google.golang.org/api/serviceusage/v1beta1"
@@ -33,7 +32,7 @@ func ProcessUpload(ctx context.Context, e events.GCSEvent) error {
 		return err
 	}
 
-	spew.Dump(quota.Config)
+	fmt.Printf("Quota: %v", quota.Config.Usage)
 
 	//
 	// Get object from Cloud Storage
