@@ -7,10 +7,8 @@ import (
 	"cloud.google.com/go/storage"
 	vision "cloud.google.com/go/vision/apiv1"
 	"context"
-	"fmt"
 	"github.com/h2non/filetype"
 	"github.com/thoas/go-funk"
-	"google.golang.org/api/serviceusage/v1beta1"
 	vision3 "google.golang.org/genproto/googleapis/cloud/vision/v1"
 	"io/ioutil"
 	"log"
@@ -24,15 +22,6 @@ func ProcessUpload(ctx context.Context, e events.GCSEvent) error {
 	log.Printf("Processing upload: %s", e.Name)
 	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT_ID")
 	projectNumber := os.Getenv("GOOGLE_CLOUD_PROJECT_NUMBER")
-
-	serviceName := fmt.Sprintf("projects/%s/services/vision.googleapis.com", projectNumber)
-	serviceusageService, err := serviceusage.NewService(ctx)
-	quota, err := serviceusageService.Services.Get(serviceName).Do()
-	if err != nil {
-		return err
-	}
-
-	fmt.Printf("Quota: %v", quota.Config.Usage)
 
 	//
 	// Get object from Cloud Storage
