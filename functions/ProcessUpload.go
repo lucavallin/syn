@@ -34,8 +34,12 @@ func ProcessUpload(ctx context.Context, e GCSEvent) error {
 
 	serviceName := fmt.Sprintf("projects/%s/services/vision.googleapis.com", projectNumber)
 	serviceusageService, err := serviceusage.NewService(ctx)
-	x := serviceusageService.Services.Get(serviceName)
-	spew.Dump(x)
+	quota, err := serviceusageService.Services.Get(serviceName).Do()
+	if err != nil {
+		return err
+	}
+
+	spew.Dump(quota)
 
 	//
 	// Get object from Cloud Storage
