@@ -85,4 +85,3 @@ The project keep costs low in a number of ways:
 ## TODO
 - describe how this flows
 - use cloud iot?
-- use scripts to setup raspberry pi

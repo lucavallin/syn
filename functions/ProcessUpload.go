@@ -3,13 +3,11 @@ package functions
 import (
 	"cavall.in/syn/database"
 	"cavall.in/syn/events"
+	"cavall.in/syn/gcs"
 	"cavall.in/syn/syn"
 	"cavall.in/syn/visionapi"
-	"cloud.google.com/go/storage"
 	"context"
-	"github.com/h2non/filetype"
 	"github.com/thoas/go-funk"
-	"io/ioutil"
 	"log"
 	"os"
 	"strings"
@@ -24,31 +22,22 @@ func ProcessUpload(ctx context.Context, e events.GCSEvent) error {
 	//
 	// Get object from Cloud Storage
 	//
-	gcs, err := storage.NewClient(ctx)
-	if err != nil {
-		return err
-	}
-	defer gcs.Close()
-
-	object := gcs.Bucket(e.Bucket).Object(e.Name)
-	objectAttrs, err := object.Attrs(ctx)
+	gcs, err := gcs.NewClient(ctx)
 	if err != nil {
 		return err
 	}
 
-	rc, err := object.NewReader(ctx)
-	if err != nil {
-		return err
-	}
-	defer rc.Close()
-
-	upload, err := ioutil.ReadAll(rc)
+	object, attrs, rc, err := gcs.GetObject(e.Bucket, e.Name)
 	if err != nil {
 		return err
 	}
 
-	if !filetype.IsImage(upload) {
+	if isImage, err := gcs.IsImage(rc); !isImage || err != nil {
 		log.Printf("Deleting upload: not an image")
+		if err := object.Delete(ctx); err != nil {
+			log.Printf("Failed to delete upload: %s", e.Name)
+			return err
+		}
 		return nil
 	}
 
@@ -60,6 +49,7 @@ func ProcessUpload(ctx context.Context, e events.GCSEvent) error {
 	acceptedLabels := funk.Map(acceptedLabelsEnv, func(l string) string {
 		return strings.ToLower(strings.TrimSpace(l))
 	}).([]string)
+
 	if len(acceptedLabels) == 0 {
 		log.Printf("Deleting upload: No ACCEPTED_LABELS provided")
 		if err := object.Delete(ctx); err != nil {
@@ -100,7 +90,7 @@ func ProcessUpload(ctx context.Context, e events.GCSEvent) error {
 		return err
 	}
 
-	data := syn.NewUpload(object.BucketName(), object.ObjectName(), labels, objectAttrs.Created)
+	data := syn.NewUpload(object.BucketName(), object.ObjectName(), labels, attrs.Created)
 	docId, err := db.AddUpload(data)
 	if err != nil {
 		return err
