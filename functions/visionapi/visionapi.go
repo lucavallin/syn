@@ -11,7 +11,7 @@ import (
 
 type Client struct {
 	ctx        context.Context
-	connection *vision.ImageAnnotatorClient
+	Connection *vision.ImageAnnotatorClient
 }
 
 func NewClient(ctx context.Context) (*Client, error) {
@@ -19,7 +19,6 @@ func NewClient(ctx context.Context) (*Client, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer connection.Close()
 
 	return &Client{ctx, connection}, nil
 }
@@ -30,7 +29,7 @@ func (c *Client) DetectImageLabels(rc io.Reader) ([]syn.Label, error) {
 		return nil, err
 	}
 
-	res, err := c.connection.DetectLabels(c.ctx, image, nil, 5)
+	res, err := c.Connection.DetectLabels(c.ctx, image, nil, 5)
 	if err != nil {
 		return nil, err
 	}

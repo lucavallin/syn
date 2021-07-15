@@ -60,6 +60,7 @@ func ProcessUpload(ctx context.Context, e events.GCSEvent) error {
 	if err != nil {
 		return err
 	}
+	defer visionApi.Connection.Close()
 
 	labels, err := visionApi.DetectImageLabels(rc)
 	if err != nil {
