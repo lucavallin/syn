@@ -8,7 +8,7 @@ import (
 
 type Client struct {
 	ctx        context.Context
-	connection *firestore.Client
+	Connection *firestore.Client
 }
 
 func NewClient(ctx context.Context, projectId string) (*Client, error) {
@@ -21,7 +21,7 @@ func NewClient(ctx context.Context, projectId string) (*Client, error) {
 }
 
 func (c *Client) AddUpload(upload *syn.Upload) (string, error) {
-	doc, _, err := c.connection.Collection("Uploads").Add(c.ctx, upload)
+	doc, _, err := c.Connection.Collection("Uploads").Add(c.ctx, upload)
 	if err != nil {
 		return "", err
 	}

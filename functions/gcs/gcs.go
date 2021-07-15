@@ -10,7 +10,7 @@ import (
 
 type Client struct {
 	ctx        context.Context
-	connection *storage.Client
+	Connection *storage.Client
 }
 
 func NewClient(ctx context.Context) (*Client, error) {
@@ -19,13 +19,11 @@ func NewClient(ctx context.Context) (*Client, error) {
 		return nil, err
 	}
 
-	defer connection.Close()
-
 	return &Client{ctx, connection}, nil
 }
 
 func (c *Client) GetObject(bucket string, name string) (*storage.ObjectHandle, *storage.ObjectAttrs, *storage.Reader, error) {
-	object := c.connection.Bucket(bucket).Object(name)
+	object := c.Connection.Bucket(bucket).Object(name)
 	attrs, err := object.Attrs(c.ctx)
 	if err != nil {
 		return nil, nil, nil, err
@@ -35,7 +33,6 @@ func (c *Client) GetObject(bucket string, name string) (*storage.ObjectHandle, *
 	if err != nil {
 		return nil, nil, nil, err
 	}
-	defer rc.Close()
 
 	return object, attrs, rc, nil
 }

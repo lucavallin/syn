@@ -26,11 +26,13 @@ func ProcessUpload(ctx context.Context, e events.GCSEvent) error {
 	if err != nil {
 		return err
 	}
+	defer gcs.Connection.Close()
 
 	object, attrs, rc, err := gcs.GetObject(e.Bucket, e.Name)
 	if err != nil {
 		return err
 	}
+	defer rc.Close()
 
 	if isImage, err := gcs.IsImage(rc); !isImage || err != nil {
 		log.Printf("Deleting upload: not an image")
@@ -89,6 +91,7 @@ func ProcessUpload(ctx context.Context, e events.GCSEvent) error {
 	if err != nil {
 		return err
 	}
+	defer db.Connection.Close()
 
 	data := syn.NewUpload(object.BucketName(), object.ObjectName(), labels, attrs.Created)
 	docId, err := db.AddUpload(data)
