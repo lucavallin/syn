@@ -9,6 +9,7 @@ import (
 	"log"
 )
 
+// Client is a wrapper around Cloud Storage to more easily read/write objects
 type Client struct {
 	ctx        context.Context
 	Connection *storage.Client

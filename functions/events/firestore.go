@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-//FirestoreEvent is the payload of a Firestore event.
+//FirestoreEvent is the payload of a Firestore event
 type FirestoreEvent struct {
 	OldValue   FirestoreValue `json:"oldValue"`
 	Value      FirestoreValue `json:"value"`
@@ -14,7 +14,7 @@ type FirestoreEvent struct {
 	} `json:"updateMask"`
 }
 
-// FirestoreValue holds Firestore fields.
+// FirestoreValue holds Firestore fields
 type FirestoreValue struct {
 	CreateTime time.Time       `json:"createTime"`
 	Fields     FirestoreUpload `json:"fields"`

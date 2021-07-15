@@ -22,21 +22,21 @@ func ProcessUpload(ctx context.Context, e events.GCSEvent) error {
 	//
 	// Get object from Cloud Storage
 	//
-	gcs, err := gcs.NewClient(ctx)
+	gcsClient, err := gcs.NewClient(ctx)
 	if err != nil {
 		return err
 	}
-	defer gcs.Connection.Close()
+	defer gcsClient.Connection.Close()
 
-	object, attrs, rc, err := gcs.GetObject(e.Bucket, e.Name)
+	object, attrs, rc, err := gcsClient.GetObject(e.Bucket, e.Name)
 	if err != nil {
 		return err
 	}
 	defer rc.Close()
 
-	if isImage, err := gcs.IsImage(rc); !isImage || err != nil {
+	if isImage, err := gcsClient.IsImage(rc); !isImage || err != nil {
 		log.Printf("Deleting upload: not an image")
-		return gcs.Delete(object)
+		return gcsClient.Delete(object)
 	}
 
 	//
@@ -50,19 +50,19 @@ func ProcessUpload(ctx context.Context, e events.GCSEvent) error {
 
 	if len(acceptedLabels) == 0 {
 		log.Printf("Deleting upload: No ACCEPTED_LABELS provided")
-		return gcs.Delete(object)
+		return gcsClient.Delete(object)
 	}
 
 	//
 	// Query Vision API
 	//
-	visionApi, err := visionapi.NewClient(ctx)
+	vision, err := visionapi.NewClient(ctx)
 	if err != nil {
 		return err
 	}
-	defer visionApi.Connection.Close()
+	defer vision.Connection.Close()
 
-	labels, err := visionApi.DetectImageLabels(rc)
+	labels, err := vision.DetectImageLabels(rc)
 	if err != nil {
 		return err
 	}
@@ -70,7 +70,7 @@ func ProcessUpload(ctx context.Context, e events.GCSEvent) error {
 	var isAllowedLabel = func(l syn.Label) bool { return -1 != funk.IndexOf(acceptedLabels, l.Description) }
 	if !funk.Contains(labels, isAllowedLabel) {
 		log.Printf("Deleting upload: no allowed labels detected. Allowed: %v, Found: %v", acceptedLabels, labels)
-		return gcs.Delete(object)
+		return gcsClient.Delete(object)
 	}
 
 	//

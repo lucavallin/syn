@@ -6,6 +6,7 @@ import (
 	"context"
 )
 
+// Client is a wrapper around Firestore to more easily store data
 type Client struct {
 	ctx        context.Context
 	Connection *firestore.Client

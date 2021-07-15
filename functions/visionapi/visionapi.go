@@ -5,7 +5,7 @@ import (
 	vision "cloud.google.com/go/vision/apiv1"
 	"context"
 	"github.com/thoas/go-funk"
-	vision3 "google.golang.org/genproto/googleapis/cloud/vision/v1"
+	visionTypes "google.golang.org/genproto/googleapis/cloud/vision/v1"
 	"io"
 )
 
@@ -34,7 +34,7 @@ func (c *Client) DetectImageLabels(rc io.Reader) ([]syn.Label, error) {
 		return nil, err
 	}
 
-	labels := funk.Map(res, func(l *vision3.EntityAnnotation) syn.Label {
+	labels := funk.Map(res, func(l *visionTypes.EntityAnnotation) syn.Label {
 		return syn.NewLabel(l.Description, l.Score)
 	}).([]syn.Label)
 

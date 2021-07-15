@@ -25,6 +25,7 @@ func NewIftttNotification(labels string, imageUrl string) *IftttNotification {
 	return &IftttNotification{labels, imageUrl}
 }
 
+// Notify triggers a webhook-based IFTTT notification
 func (n *IftttNotifier) Notify(notification *IftttNotification) error {
 	body, err := json.Marshal(notification)
 	if err != nil {
