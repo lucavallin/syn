@@ -37,7 +37,7 @@ resource "google_storage_bucket_iam_binding" "raspberry_pi" {
 # Copy service account keys to the Raspberry Pi
 #
 resource "null_resource" "raspberrypi_keys" {
-  triggers {
+  triggers = {
     timestamp = timestamp()
   }
 
@@ -58,7 +58,7 @@ resource "null_resource" "raspberrypi_keys" {
 # Copy motion configuration to the Raspberry Pi
 #
 resource "null_resource" "raspberrypi_motion_config" {
-  triggers {
+  triggers = {
     timestamp = timestamp()
   }
 
@@ -81,7 +81,7 @@ resource "null_resource" "raspberrypi_motion_config" {
 resource "null_resource" "raspberrypi_init_script" {
   depends_on = [null_resource.raspberrypi_motion_config]
 
-  triggers {
+  triggers = {
     timestamp = timestamp()
   }
 
@@ -108,7 +108,7 @@ resource "null_resource" "raspberrypi_init_script" {
 resource "null_resource" "raspberrypi_init" {
   depends_on = [null_resource.raspberrypi_init_script]
 
-  triggers {
+  triggers = {
     timestamp = timestamp()
   }
 
