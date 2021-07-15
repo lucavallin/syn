@@ -4,6 +4,7 @@ import (
 	"cavall.in/syn/syn"
 	vision "cloud.google.com/go/vision/apiv1"
 	"context"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/thoas/go-funk"
 	visionTypes "google.golang.org/genproto/googleapis/cloud/vision/v1"
 	"io"
@@ -30,6 +31,7 @@ func (c *Client) DetectImageLabels(rc io.Reader) ([]syn.Label, error) {
 	}
 
 	res, err := c.Connection.DetectLabels(c.ctx, image, nil, 5)
+	spew.Dump(res, err)
 	if err != nil {
 		return nil, err
 	}
