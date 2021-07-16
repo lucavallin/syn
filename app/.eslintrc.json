@@ -25,5 +25,6 @@
         "prettier"
     ],
     "rules": {
-    }
+    },
+    "ignorePatterns": [ "components/__tests__/*", "babel.config.js" ]
 }
