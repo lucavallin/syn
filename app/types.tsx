@@ -9,9 +9,9 @@ export type RootStackParamList = {
 };
 
 export type BottomTabParamList = {
-  TabOne: undefined;
+  Uploads: undefined;
 };
 
-export type TabOneParamList = {
-  TabOneScreen: undefined;
+export type UploadsStackParamList = {
+  UploadsScreen: undefined;
 };

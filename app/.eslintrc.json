@@ -25,7 +25,11 @@
         "prettier"
     ],
     "rules": {
-        "no-use-before-define": ["off"]
+        "no-use-before-define": ["off"],
+        "import/extensions": ["off"],
+        "import/no-unresolved": ["off"],
+        "react/jsx-filename-extension": ["off"],
+        "react/jsx-props-no-spreading": ["off"]
     },
     "ignorePatterns": [ "components/__tests__/*", "babel.config.js" ]
 }

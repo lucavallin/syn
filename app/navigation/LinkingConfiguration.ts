@@ -14,12 +14,12 @@ export default {
         screens: {
           TabOne: {
             screens: {
-              TabOneScreen: "one"
-            }
-          }
-        }
+              TabOneScreen: "one",
+            },
+          },
+        },
       },
-      NotFound: "*"
-    }
-  }
+      NotFound: "*",
+    },
+  },
 };
