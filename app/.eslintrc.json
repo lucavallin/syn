@@ -25,6 +25,7 @@
         "prettier"
     ],
     "rules": {
+        "no-use-before-define": ["off"]
     },
     "ignorePatterns": [ "components/__tests__/*", "babel.config.js" ]
 }
