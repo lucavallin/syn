@@ -7,7 +7,9 @@
         "eslint:recommended",
         "plugin:react/recommended",
         "airbnb",
-        "prettier"
+        "airbnb/hooks",
+        "prettier",
+        "plugin:prettier/recommended"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -19,7 +21,8 @@
     },
     "plugins": [
         "react",
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "prettier"
     ],
     "rules": {
     }
