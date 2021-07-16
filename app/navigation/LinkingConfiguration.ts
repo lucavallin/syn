@@ -12,14 +12,13 @@ export default {
     screens: {
       Root: {
         screens: {
-          TabOne: {
+          Uploads: {
             screens: {
-              TabOneScreen: "one",
+              UploadsScreen: "uploads",
             },
           },
         },
       },
-      NotFound: "*",
     },
   },
 };

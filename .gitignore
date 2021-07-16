@@ -8,3 +8,4 @@ node_modules
 ../cats.jpeg
 cats.jpeg
 .expo
+.env

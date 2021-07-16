@@ -5,10 +5,9 @@
 
 export type RootStackParamList = {
   Root: undefined;
-  NotFound: undefined;
 };
 
-export type BottomTabParamList = {
+export type TabNavigatorParamList = {
   Uploads: undefined;
 };
 
