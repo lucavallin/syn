@@ -74,7 +74,7 @@ Syn uses a React Native application as frontend. The application works on all pl
 - `expo` for React Native development
 - `native-base` as UI library
 - `firebase` to provide backend functionality
-- `redux` because I wanted to test it after many years I haven't touched it.
+- `redux` because I wanted to test it after many years I haven't touched it
 
 ## IFTTT
 The project currently sends detection notifications to the IFTTT app via IFTTT webhooks. The webhook URL can be configured via Terraform and it looks like this: `https://maker.ifttt.com/trigger/<event-name>/with/key/<key>`. Replace `<event-name>` and `<key>` with your information.

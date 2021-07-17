@@ -1,22 +1,18 @@
-import React from "react";
+import React, { FunctionComponent } from "react";
 import { ScrollView, VStack, Center } from "native-base";
 
-interface
-
 interface EventListProps {
-  events: Event
+  events: Array<string>;
 }
 
-export function EventList<EventListProps> = ({ uploads }) => {
-  return (
-    <ScrollView>
-      <VStack>
-        {uploads.map((val) => (
-          <Center rounded="lg" p={7} bg="primary.400" my={5} mb={3}>
-            {val}
-          </Center>
-        ))}
-      </VStack>
-    </ScrollView>
-  );
-};
+export const EventList: FunctionComponent<EventListProps> = ({ events }) => (
+  <ScrollView>
+    <VStack>
+      {events.map((e) => (
+        <Center key={e} rounded="lg" p={7} bg="primary.400" my={5} mb={3}>
+          {e}
+        </Center>
+      ))}
+    </VStack>
+  </ScrollView>
+);

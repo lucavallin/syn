@@ -13,8 +13,11 @@ const BottomTabNavigator = createBottomTabNavigator<TabNavigatorParamList>();
 
 export default function TabNavigator() {
   return (
-    <BottomTabNavigator.Navigator initialRouteName="Events">
-      <BottomTabNavigator.Screen name="Events" component={EventsNavigator} />
+    <BottomTabNavigator.Navigator initialRouteName="EventsScreen">
+      <BottomTabNavigator.Screen
+        name="EventsScreen"
+        component={EventsNavigator}
+      />
     </BottomTabNavigator.Navigator>
   );
 }

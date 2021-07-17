@@ -14,7 +14,7 @@ export default {
         screens: {
           Events: {
             screens: {
-              Events: "Events",
+              EventsScreen: "events",
             },
           },
         },

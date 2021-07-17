@@ -1,6 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import * as React from "react";
-import { EventsScreen } from "../components/events/EventsScreen";
+import { EventsScreen } from "../screens/EventsScreen";
 import { EventsStackParamList } from "../types";
 
 // Each tab has its own navigation stack, you can read more about this pattern here:
@@ -11,7 +11,7 @@ export default function EventsNavigator() {
   return (
     <Events.Navigator>
       <Events.Screen
-        name="Events"
+        name="EventsScreen"
         component={EventsScreen}
         options={{ headerTitle: "Events" }}
       />

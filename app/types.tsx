@@ -8,9 +8,9 @@ export type RootStackParamList = {
 };
 
 export type TabNavigatorParamList = {
-  Events: undefined;
+  EventsScreen: undefined;
 };
 
 export type EventsStackParamList = {
-  Events: undefined;
+  EventsScreen: undefined;
 };
