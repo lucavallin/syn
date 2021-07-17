@@ -1,7 +1,13 @@
 import React from "react";
 import { ScrollView, VStack, Center } from "native-base";
 
-export default ({ uploads }) => {
+interface
+
+interface EventListProps {
+  events: Event
+}
+
+export function EventList<EventListProps> = ({ uploads }) => {
   return (
     <ScrollView>
       <VStack>

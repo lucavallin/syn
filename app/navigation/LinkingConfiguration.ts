@@ -12,9 +12,9 @@ export default {
     screens: {
       Root: {
         screens: {
-          Uploads: {
+          Events: {
             screens: {
-              UploadsScreen: "uploads",
+              Events: "Events",
             },
           },
         },

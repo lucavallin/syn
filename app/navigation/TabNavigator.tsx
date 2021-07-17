@@ -7,14 +7,14 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as React from "react";
 
 import { TabNavigatorParamList } from "../types";
-import UploadsNavigator from "./UploadsNavigator";
+import EventsNavigator from "./EventsNavigator";
 
 const BottomTabNavigator = createBottomTabNavigator<TabNavigatorParamList>();
 
 export default function TabNavigator() {
   return (
-    <BottomTabNavigator.Navigator initialRouteName="Uploads">
-      <BottomTabNavigator.Screen name="Uploads" component={UploadsNavigator} />
+    <BottomTabNavigator.Navigator initialRouteName="Events">
+      <BottomTabNavigator.Screen name="Events" component={EventsNavigator} />
     </BottomTabNavigator.Navigator>
   );
 }

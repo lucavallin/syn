@@ -8,9 +8,9 @@ export type RootStackParamList = {
 };
 
 export type TabNavigatorParamList = {
-  Uploads: undefined;
+  Events: undefined;
 };
 
-export type UploadsStackParamList = {
-  UploadsScreen: undefined;
+export type EventsStackParamList = {
+  Events: undefined;
 };

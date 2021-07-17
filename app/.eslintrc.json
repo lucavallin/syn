@@ -5,11 +5,12 @@
     },
     "extends": [
         "eslint:recommended",
-        "plugin:react/recommended",
         "airbnb",
         "airbnb/hooks",
+        "plugin:react/recommended",
         "prettier",
-        "plugin:prettier/recommended"
+        "plugin:prettier/recommended",
+        "plugin:react-redux/recommended"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -22,14 +23,17 @@
     "plugins": [
         "react",
         "@typescript-eslint",
-        "prettier"
+        "prettier",
+        "react-redux"
     ],
     "rules": {
         "no-use-before-define": ["off"],
         "import/extensions": ["off"],
         "import/no-unresolved": ["off"],
         "react/jsx-filename-extension": ["off"],
-        "react/jsx-props-no-spreading": ["off"]
+        "react/jsx-props-no-spreading": ["off"],
+        "import/prefer-default-expor": ["off"],
+        "no-param-reassign": ["off"]
     },
     "ignorePatterns": [ "components/__tests__/*", "babel.config.js" ]
 }
