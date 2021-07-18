@@ -16,7 +16,7 @@ export const getEvents = createAsyncThunk("events/getEvents", async () => {
   const response = await firestore.collection("Uploads").get();
   return response.docs.map((d) => ({
     id: d.id,
-    created: d.get("created"),
+    created: d.get("created").toDate(),
     labels: d.get("labels"),
   })) as EventData[];
 });

@@ -12,5 +12,5 @@ export type DrawerNavigatorParamList = {
 };
 
 export type EventsStackParamList = {
-  EventsScreen: undefined;
+  Events: undefined;
 };

@@ -6,7 +6,9 @@ export const store = configureStore({
   reducer: {
     events: eventsReducer,
   },
-  middleware: getDefaultMiddleware().concat(logger),
+  middleware: getDefaultMiddleware({
+    serializableCheck: false,
+  }).concat(logger),
 });
 
 export type AppDispatch = typeof store.dispatch;

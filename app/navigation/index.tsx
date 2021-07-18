@@ -1,18 +1,19 @@
-/**
- * If you are not familiar with React Navigation, check out the "Fundamentals" guide:
- * https://reactnavigation.org/docs/getting-started
- *
- */
 import { NavigationContainer } from "@react-navigation/native";
 import * as React from "react";
 
+import { createStackNavigator } from "@react-navigation/stack";
 import LinkingConfiguration from "./LinkingConfiguration";
-import RootNavigator from "./RootNavigator";
+import { RootStackParamList } from "../types";
+import DrawerNavigator from "./DrawerNavigator";
+
+const RootStack = createStackNavigator<RootStackParamList>();
 
 export default function Navigation() {
   return (
     <NavigationContainer linking={LinkingConfiguration}>
-      <RootNavigator />
+      <RootStack.Navigator screenOptions={{ headerShown: false }}>
+        <RootStack.Screen name="Root" component={DrawerNavigator} />
+      </RootStack.Navigator>
     </NavigationContainer>
   );
 }

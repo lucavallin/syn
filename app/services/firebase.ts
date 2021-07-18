@@ -11,7 +11,7 @@ const firebaseConfig = {
   projectId: Constants.manifest?.extra?.firebaseProjectId,
   storageBucket: `${Constants.manifest?.extra?.firebaseProjectId}.appspot.com`,
   messagingSenderId: "sender-id",
-  appId: "app-id",
+  appId: Constants.manifest?.extra?.firebaseProjectId,
   measurementId: "G-measurement-id",
 };
 
