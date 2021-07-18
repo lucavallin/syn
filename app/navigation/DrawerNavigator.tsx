@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import { FontAwesome } from "@expo/vector-icons";
 import { DrawerNavigatorParamList } from "../types";
 import EventsNavigator from "./EventsNavigator";
 import { DrawerContent } from "../components/navigation/Drawer";
@@ -13,7 +14,13 @@ export default function DrawerNavigator() {
       initialRouteName="Events"
       drawerContent={(props) => <DrawerContent {...props} />}
     >
-      <DrawerNavigation.Screen name="Events" component={EventsNavigator} />
+      <DrawerNavigation.Screen
+        name="Events"
+        component={EventsNavigator}
+        options={{
+          drawerIcon: ({ size }) => <FontAwesome name="table" size={size} />,
+        }}
+      />
     </DrawerNavigation.Navigator>
   );
 }
