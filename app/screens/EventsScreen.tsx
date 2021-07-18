@@ -9,7 +9,7 @@ export const EventsScreen: FunctionComponent = () => {
 
   useEffect(() => {
     dispatch(getEvents());
-  }, [dispatch, events]);
+  }, [dispatch]);
 
   return <Events events={events} />;
 };

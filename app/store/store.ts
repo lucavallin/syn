@@ -8,7 +8,7 @@ export const store = configureStore({
   },
   middleware: getDefaultMiddleware({
     serializableCheck: false,
-  }).concat(logger),
+  }),
 });
 
 export type AppDispatch = typeof store.dispatch;
