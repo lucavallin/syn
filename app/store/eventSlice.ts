@@ -4,14 +4,21 @@ import {
   createSlice,
 } from "@reduxjs/toolkit";
 import { RootState } from "./store";
+import { firestore } from "../services/firebase";
 
-interface EventData {
+export interface EventData {
   id: string;
+  created: string;
+  labels: Array<{ description: string; score: number }>;
 }
 
 export const getEvents = createAsyncThunk("events/getEvents", async () => {
-  const response = await fetch("https://reqres.in/api/users?delay=1");
-  return (await response.json()).data as EventData[];
+  const response = await firestore.collection("Uploads").get();
+  return response.docs.map((d) => ({
+    id: d.id,
+    created: d.get("created"),
+    labels: d.get("labels"),
+  })) as EventData[];
 });
 
 export const eventsAdapter = createEntityAdapter<EventData>();

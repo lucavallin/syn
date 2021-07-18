@@ -7,8 +7,8 @@ export type RootStackParamList = {
   Root: undefined;
 };
 
-export type TabNavigatorParamList = {
-  EventsScreen: undefined;
+export type DrawerNavigatorParamList = {
+  Events: undefined;
 };
 
 export type EventsStackParamList = {
