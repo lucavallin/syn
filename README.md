@@ -96,5 +96,3 @@ The project keep costs low in a number of ways:
 - mirror github repo
 - setup functions for local development and automated deployment
 - Docs about getting firebase api key, auth consent screen
-- review redux coupling
-- redux persist

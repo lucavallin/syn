@@ -1,5 +1,4 @@
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
-import logger from "redux-logger";
 import eventsReducer from "./eventSlice";
 
 export const store = configureStore({
