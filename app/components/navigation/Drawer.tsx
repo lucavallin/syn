@@ -28,7 +28,7 @@ export const Hamburger: FunctionComponent = () => {
   return (
     <HStack alignItems="center">
       <Pressable onPress={toggleDrawer}>
-        <HamburgerIcon ml={2} size="sm" />
+        <HamburgerIcon ml={6} size="sm" />
       </Pressable>
     </HStack>
   );

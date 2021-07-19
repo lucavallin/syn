@@ -18,7 +18,7 @@ export default function DrawerNavigator() {
         name="Events"
         component={EventsNavigator}
         options={{
-          drawerIcon: ({ size }) => <FontAwesome name="table" size={size} />,
+          drawerIcon: ({ size }) => <FontAwesome name="calendar" size={size} />,
         }}
       />
     </DrawerNavigation.Navigator>
