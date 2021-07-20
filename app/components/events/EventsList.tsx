@@ -36,7 +36,7 @@ export const EventsList: FunctionComponent<EventsProps> = ({ events }) => {
                 >
                   <Image
                     source={{
-                      uri: "https://images.unsplash.com/photo-1625772768856-982375e8cd17?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1950&q=80",
+                      uri: e.imageUrl,
                     }}
                     alt="image base"
                     resizeMode="cover"
@@ -55,8 +55,13 @@ export const EventsList: FunctionComponent<EventsProps> = ({ events }) => {
                   <Stack space={4} p={[4, 4, 8]}>
                     <Text color="gray.400">{e.created.toString()}</Text>
                     <Wrap direction="row">
-                      {e.labels.map((l) => (
-                        <Badge colorScheme="success" mr={2} mt={2}>
+                      {e.labels.map((l, i) => (
+                        <Badge
+                          colorScheme="success"
+                          mr={2}
+                          mt={2}
+                          key={`${e.id}.${i}`}
+                        >
                           {l.description}
                         </Badge>
                       ))}

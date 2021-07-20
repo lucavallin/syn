@@ -21,8 +21,8 @@ func NewClient(ctx context.Context, projectId string) (*Client, error) {
 	return &Client{ctx, connection}, nil
 }
 
-func (c *Client) AddUpload(upload *syn.Upload) (string, error) {
-	doc, _, err := c.Connection.Collection("Uploads").Add(c.ctx, upload)
+func (c *Client) AddEvent(event *syn.Event) (string, error) {
+	doc, _, err := c.Connection.Collection("Events").Add(c.ctx, event)
 	if err != nil {
 		return "", err
 	}

@@ -4,23 +4,28 @@ import {
   createSlice,
 } from "@reduxjs/toolkit";
 import { RootState } from "./store";
-import { firestore } from "../services/firebase";
+import { firestore, storage } from "../services/firebase";
 
 export interface EventData {
   id: string;
-  created: string;
+  imageUrl: string;
+  created: Date;
   labels: Array<{ description: string; score: number }>;
 }
 
 export const getEvents = createAsyncThunk("events/getEvents", async () => {
   const response = await firestore.collection("Uploads").get();
-  return response.docs.map((d) => {
-    return {
-      id: d.id,
-      created: d.get("created").toDate(),
-      labels: d.get("labels"),
-    } as EventData;
-  });
+  return Promise.all(
+    response.docs.map(async (d) => {
+      const url = await storage.refFromURL(d.get("uri")).getDownloadURL();
+      return {
+        id: d.id,
+        imageUrl: url,
+        created: d.get("created").toDate(),
+        labels: d.get("labels"),
+      } as EventData;
+    })
+  );
 });
 
 export const eventsAdapter = createEntityAdapter<EventData>();
@@ -30,7 +35,11 @@ const eventsSlice = createSlice({
   initialState: eventsAdapter.getInitialState({
     loading: false,
   }),
-  reducers: {},
+  reducers: {
+    "events/getEvents": (state, action) => {
+      eventsAdapter.setAll(state, action.payload);
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getEvents.pending, (state) => {
       state.loading = true;

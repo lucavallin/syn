@@ -40,11 +40,11 @@ export default function App() {
   }
   return (
     <Provider store={store}>
-      <PersistGate persistor={persistor}>
-        <NativeBaseProvider theme={theme}>
-          <Navigation />
-        </NativeBaseProvider>
-      </PersistGate>
+      {/* <PersistGate persistor={persistor}> */}
+      <NativeBaseProvider theme={theme}>
+        <Navigation />
+      </NativeBaseProvider>
+      {/* </PersistGate> */}
     </Provider>
   );
 }

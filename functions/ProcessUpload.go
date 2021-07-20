@@ -76,8 +76,8 @@ func ProcessUpload(ctx context.Context, e events.GCSEvent) error {
 	}
 	defer db.Connection.Close()
 
-	data := syn.NewUpload(object.Bucket, object.Name, object.Created, labels)
-	docId, err := db.AddUpload(data)
+	data := syn.NewEvent(object.URI, object.Created, labels)
+	docId, err := db.AddEvent(data)
 	if err != nil {
 		return err
 	}
