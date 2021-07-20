@@ -35,11 +35,7 @@ const eventsSlice = createSlice({
   initialState: eventsAdapter.getInitialState({
     loading: false,
   }),
-  reducers: {
-    "events/getEvents": (state, action) => {
-      eventsAdapter.setAll(state, action.payload);
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getEvents.pending, (state) => {
       state.loading = true;
