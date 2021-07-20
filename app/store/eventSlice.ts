@@ -14,7 +14,7 @@ export interface EventData {
 }
 
 export const getEvents = createAsyncThunk("events/getEvents", async () => {
-  const response = await firestore.collection("Uploads").get();
+  const response = await firestore.collection("Events").get();
   return Promise.all(
     response.docs.map(async (d) => {
       const url = await storage.refFromURL(d.get("uri")).getDownloadURL();

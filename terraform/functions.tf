@@ -71,7 +71,7 @@ resource "google_cloudfunctions_function" "notify" {
 
   event_trigger {
     event_type = "providers/cloud.firestore/eventTypes/document.create"
-    resource   = "Uploads/{ids}"
+    resource   = "Events/{ids}"
   }
 
   environment_variables = {

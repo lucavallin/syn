@@ -92,7 +92,9 @@ The project keep costs low in a number of ways:
 
 ## TODO
 - Describe data flow
-- Let motion trigger a custom app that uses Cloud IoT?
+- Idea: Let motion trigger a custom app that uses Core IoT?
+- Firebase documentation
+- Add authentication
 - Mirror github repo
 - Setup functions for local development and automated deployment
-- Firebase documentation
+- Create pipelines
