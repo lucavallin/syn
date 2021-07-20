@@ -53,7 +53,9 @@ export const EventsList: FunctionComponent<EventsProps> = ({ events }) => {
                     ID: {e.id}
                   </Text>
                   <Stack space={4} p={[4, 4, 8]}>
-                    <Text color="gray.400">{e.created.toString()}</Text>
+                    <Text color="gray.400" fontFamily="body">
+                      {e.created.toString()}
+                    </Text>
                     <HStack>
                       {e.labels.map((l) => (
                         <Badge colorScheme="success" mr={2} key={l.score}>

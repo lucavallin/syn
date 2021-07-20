@@ -91,9 +91,8 @@ The project keep costs low in a number of ways:
 - I have been looking for a way to limit requests to the Vision API outside the free-tier limit, but I don't have a good way to do it yet.
 
 ## TODO
-- describe how this flows
-- use cloud iot?
-- mirror github repo
-- setup functions for local development and automated deployment
-- Docs about getting firebase api key, auth consent screen
-- Persist store
+- Describe data flow
+- Let motion trigger a custom app that uses Cloud IoT?
+- Mirror github repo
+- Setup functions for local development and automated deployment
+- Firebase config and Auth Screen documentation

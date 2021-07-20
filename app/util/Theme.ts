@@ -2,48 +2,32 @@ import { extendTheme } from "native-base";
 
 export default extendTheme({
   fontConfig: {
-    Roboto: {
+    Lato: {
       100: {
-        normal: "Roboto-Light",
-        italic: "Roboto-LightItalic",
-      },
-      200: {
-        normal: "Roboto-Light",
-        italic: "Roboto-LightItalic",
+        normal: "Lato_100Thin",
+        italic: "Lato_100Thin_Italic",
       },
       300: {
-        normal: "Roboto-Light",
-        italic: "Roboto-LightItalic",
+        normal: "Lato_300Light",
+        italic: "Lato_300Light_Italic",
       },
       400: {
-        normal: "Roboto-Regular",
-        italic: "Roboto-Italic",
+        normal: "Lato_400Regular",
+        italic: "Lato_400Regular_Italic",
       },
-      500: {
-        normal: "Roboto-Medium",
+      700: {
+        normal: "Lato_700Bold",
+        italic: "Lato_700Bold_Italic",
       },
-      600: {
-        normal: "Roboto-Medium",
-        italic: "Roboto-MediumItalic",
+      900: {
+        normal: "Lato_900Black",
+        italic: "Lato_900Black_Italic",
       },
-      // Add more variants
-      //   700: {
-      //     normal: 'Roboto-Bold',
-      //   },
-      //   800: {
-      //     normal: 'Roboto-Bold',
-      //     italic: 'Roboto-BoldItalic',
-      //   },
-      //   900: {
-      //     normal: 'Roboto-Bold',
-      //     italic: 'Roboto-BoldItalic',
-      //   },
     },
   },
-  // Make sure values below matches any of the keys in `fontConfig`
   fonts: {
-    heading: "Roboto",
-    body: "Roboto",
-    mono: "Roboto",
+    heading: "Lato",
+    body: "Lato",
+    mono: "Lato",
   },
 });

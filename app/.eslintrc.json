@@ -35,7 +35,8 @@
         "import/prefer-default-export": ["off"],
         "no-param-reassign": ["off"],
         "react/prop-types": ["off"],
-        "react/display-name": ["off"]
+        "react/display-name": ["off"],
+        "camelcase": ["off"]
     },
     "ignorePatterns": [ "components/__tests__/*", "babel.config.js" ]
 }
