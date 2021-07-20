@@ -3,13 +3,13 @@ import * as React from "react";
 import {
   Badge,
   Box,
-  HStack,
   Image,
   ScrollView,
   Stack,
   Text,
   VStack,
   Center,
+  Wrap,
 } from "native-base";
 import { FunctionComponent } from "react";
 import { EventData } from "../../store/eventSlice";
@@ -53,16 +53,14 @@ export const EventsList: FunctionComponent<EventsProps> = ({ events }) => {
                     ID: {e.id}
                   </Text>
                   <Stack space={4} p={[4, 4, 8]}>
-                    <Text color="gray.400" fontFamily="body">
-                      {e.created.toString()}
-                    </Text>
-                    <HStack>
+                    <Text color="gray.400">{e.created.toString()}</Text>
+                    <Wrap direction="row">
                       {e.labels.map((l) => (
-                        <Badge colorScheme="success" mr={2} key={l.score}>
+                        <Badge colorScheme="success" mr={2} mt={2}>
                           {l.description}
                         </Badge>
                       ))}
-                    </HStack>
+                    </Wrap>
                     <Text color="gray.700">Tap for more information.</Text>
                   </Stack>
                 </Box>

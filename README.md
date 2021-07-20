@@ -95,4 +95,4 @@ The project keep costs low in a number of ways:
 - Let motion trigger a custom app that uses Cloud IoT?
 - Mirror github repo
 - Setup functions for local development and automated deployment
-- Firebase config and Auth Screen documentation
+- Firebase documentation

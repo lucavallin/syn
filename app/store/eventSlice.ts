@@ -14,11 +14,13 @@ export interface EventData {
 
 export const getEvents = createAsyncThunk("events/getEvents", async () => {
   const response = await firestore.collection("Uploads").get();
-  return response.docs.map((d) => ({
-    id: d.id,
-    created: d.get("created").toDate(),
-    labels: d.get("labels"),
-  })) as EventData[];
+  return response.docs.map((d) => {
+    return {
+      id: d.id,
+      created: d.get("created").toDate(),
+      labels: d.get("labels"),
+    } as EventData;
+  });
 });
 
 export const eventsAdapter = createEntityAdapter<EventData>();

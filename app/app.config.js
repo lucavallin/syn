@@ -33,6 +33,8 @@ export default {
     extra: {
       firebaseApiKey: process.env.FIREBASE_API_KEY,
       firebaseProjectId: process.env.FIREBASE_PROJECT_ID,
+      firebaseSenderId: process.env.FIREBASE_SENDER_ID,
+      firebaseMeasurementId: process.env.FIREBASE_MEASUREMENT_ID,
     },
   },
 };
