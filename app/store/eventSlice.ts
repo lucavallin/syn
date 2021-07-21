@@ -34,6 +34,7 @@ const eventsSlice = createSlice({
   name: "events",
   initialState: eventsAdapter.getInitialState({
     loading: false,
+    events: [] as Array<EventData>,
   }),
   reducers: {},
   extraReducers: (builder) => {
