@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import firebase, { googleAuthProvider } from "../services/firebase";
 
 export interface UserData {
   id: string;
