@@ -5,10 +5,12 @@ import {
 } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { persistStore, persistReducer } from "redux-persist";
-import eventsReducer from "./eventSlice";
+import eventsReducer from "./eventsSlice";
+import userReducer from "./userSlice";
 
 const rootReducer = combineReducers({
   events: eventsReducer,
+  user: userReducer,
 });
 
 const persistConfig = {
