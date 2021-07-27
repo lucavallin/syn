@@ -11,7 +11,7 @@ import (
 
 // Notify is triggered by a change to a Firestore document and it sends a notification to IFTTT
 func Notify(ctx context.Context, e events.FirestoreEvent) error {
-	log.Printf("Event received: %v", e)
+	log.Printf("Event received: %+v", e)
 	iftttWebhookUrl := os.Getenv("IFTTT_WEBHOOK_URL")
 
 	labels := e.GetUploadLabels()
