@@ -12,7 +12,7 @@ import {
   Wrap,
 } from "native-base";
 import { FunctionComponent } from "react";
-import { EventData } from "../../store/eventSlice";
+import { EventData } from "../../store/eventsSlice";
 
 interface EventsProps {
   events: EventData[];
